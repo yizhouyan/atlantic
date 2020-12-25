@@ -81,7 +81,7 @@ public class PostgresFastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(psqlConn);
@@ -117,7 +117,7 @@ public class PostgresFastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(psqlConn);
@@ -157,7 +157,7 @@ public class PostgresFastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(psqlConn);
@@ -192,7 +192,7 @@ public class PostgresFastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(psqlConn);

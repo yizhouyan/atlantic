@@ -22,121 +22,139 @@ import java.util.regex.Pattern;
 
 import com.rits.cloning.Cloner;
 
-/** Created by Dong Young Yoon on 8/9/18. */
+/**
+ * Created by Dong Young Yoon on 8/9/18.
+ */
 public class VerdictOption {
 
-  private static final String VERDICT_TEMP_TABLE_PREFIX = "verdictdbtemptable";
-  private static final String DEFAULT_META_SCHEMA_NAME = "verdictdbmeta";
-  private static final String DEFAULT_TEMP_SCHEMA_NAME = "verdictdbtemp";
+    private static final String VERDICT_TEMP_TABLE_PREFIX = "verdictdbtemptable";
+    private static final String DEFAULT_META_SCHEMA_NAME = "verdictdbmeta";
+    private static final String DEFAULT_TEMP_SCHEMA_NAME = "verdictdbtemp";
 
-  private static final String DEFAULT_CONSOLE_LOG_LEVEL = "info";
-  private static final String DEFAULT_FILE_LOG_LEVEL = "debug";
+    private static final String DEFAULT_CONSOLE_LOG_LEVEL = "debug";
+    private static final String DEFAULT_FILE_LOG_LEVEL = "debug";
+    private static final boolean ENABLE_PRIVACY = true;
 
-  private String verdictMetaSchemaName = DEFAULT_META_SCHEMA_NAME;
-  private String verdictTempSchemaName = DEFAULT_TEMP_SCHEMA_NAME;
-  private String verdictConsoleLogLevel = DEFAULT_CONSOLE_LOG_LEVEL;
-  private String verdictFileLogLevel = DEFAULT_FILE_LOG_LEVEL;
+    private String verdictMetaSchemaName = DEFAULT_META_SCHEMA_NAME;
+    private String verdictTempSchemaName = DEFAULT_TEMP_SCHEMA_NAME;
+    private String verdictConsoleLogLevel = DEFAULT_CONSOLE_LOG_LEVEL;
+    private String verdictFileLogLevel = DEFAULT_FILE_LOG_LEVEL;
 
-  public VerdictOption() {}
+    // Differential Privacy related parameters
+    private static final double PRIVACY_EPSILON = Math.pow(10, -2);
+    private static final double PRIVACY_DELTA = Math.pow(10, -6);
 
-  /**
-   * Performs a deepcopy of current object
-   *
-   * @return a deepcopy of the current object
-   */
-  public VerdictOption copy() {
-    return new Cloner().deepClone(this);
-  }
-
-  public String getVerdictMetaSchemaName() {
-    return verdictMetaSchemaName;
-  }
-
-  public void setVerdictMetaSchemaName(String verdictMetaSchemaName) {
-    this.verdictMetaSchemaName = verdictMetaSchemaName;
-  }
-
-  public String getVerdictTempSchemaName() {
-    return verdictTempSchemaName;
-  }
-
-  public String getVerdictConsoleLogLevel() {
-    return verdictConsoleLogLevel;
-  }
-
-  public void setVerdictConsoleLogLevel(String level) {
-    this.verdictConsoleLogLevel = level;
-    VerdictDBLogger.setConsoleLogLevel(level);
-  }
-
-  public String getVerdictFileLogLevel() {
-    return verdictFileLogLevel;
-  }
-
-  public void setVerdictFileLogLevel(String level) {
-    this.verdictFileLogLevel = level;
-    VerdictDBLogger.setFileLogLevel(level);
-  }
-
-  public void setVerdictTempSchemaName(String verdictTempSchemaName) {
-    this.verdictTempSchemaName = verdictTempSchemaName;
-  }
-
-  public static String getVerdictTempTablePrefix() {
-    return VERDICT_TEMP_TABLE_PREFIX;
-  }
-
-  public static String getDefaultMetaSchemaName() {
-    return DEFAULT_META_SCHEMA_NAME;
-  }
-
-  public static String getDefaultTempSchemaName() {
-    return DEFAULT_TEMP_SCHEMA_NAME;
-  }
-
-  public static String getDefaultConsoleLogLevel() {
-    return DEFAULT_CONSOLE_LOG_LEVEL;
-  }
-
-  public static String getDefaultFileLogLevel() {
-    return DEFAULT_FILE_LOG_LEVEL;
-  }
-
-  public void parseConnectionString(String str) {
-    String[] tokens = str.split("[&;?]");
-    String pattern = "\\w+=\\w+";
-    Pattern p = Pattern.compile(pattern);
-    for (String token : tokens) {
-      Matcher m = p.matcher(token);
-      if (m.matches()) {
-        String[] option = token.split("=");
-        switch (option[0].toLowerCase()) {
-          case "verdictdbmetaschema":
-            this.setVerdictMetaSchemaName(option[1]);
-            break;
-          case "verdictdbtempschema":
-            this.setVerdictTempSchemaName(option[1]);
-            break;
-          case "loglevel":
-            this.setVerdictConsoleLogLevel(option[1]);
-            break;
-          case "file_loglevel":
-            this.setVerdictFileLogLevel(option[1]);
-            break;
-          default:
-            break;
-        }
-      }
+    public VerdictOption() {
     }
-  }
 
-  public void parseProperties(Properties prop) {
-    // Get properties here
-    String newVerdictMetaSchemaName = prop.getProperty("verdictdbmetaschema");
-    String newVerdictTempSchemaName = prop.getProperty("verdictdbtempschema");
+    /**
+     * Performs a deepcopy of current object
+     *
+     * @return a deepcopy of the current object
+     */
+    public VerdictOption copy() {
+        return new Cloner().deepClone(this);
+    }
 
-    // Set them if properties exist
-    if (newVerdictMetaSchemaName != null) verdictMetaSchemaName = newVerdictMetaSchemaName;
-    if (newVerdictTempSchemaName != null) verdictTempSchemaName = newVerdictTempSchemaName;
-  }
+    public String getVerdictMetaSchemaName() {
+        return verdictMetaSchemaName;
+    }
+
+    public void setVerdictMetaSchemaName(String verdictMetaSchemaName) {
+        this.verdictMetaSchemaName = verdictMetaSchemaName;
+    }
+
+    public String getVerdictTempSchemaName() {
+        return verdictTempSchemaName;
+    }
+
+    public String getVerdictConsoleLogLevel() {
+        return verdictConsoleLogLevel;
+    }
+
+    public void setVerdictConsoleLogLevel(String level) {
+        this.verdictConsoleLogLevel = level;
+        VerdictDBLogger.setConsoleLogLevel(level);
+    }
+
+    public String getVerdictFileLogLevel() {
+        return verdictFileLogLevel;
+    }
+
+    public void setVerdictFileLogLevel(String level) {
+        this.verdictFileLogLevel = level;
+        VerdictDBLogger.setFileLogLevel(level);
+    }
+
+    public void setVerdictTempSchemaName(String verdictTempSchemaName) {
+        this.verdictTempSchemaName = verdictTempSchemaName;
+    }
+
+    public static String getVerdictTempTablePrefix() {
+        return VERDICT_TEMP_TABLE_PREFIX;
+    }
+
+    public static String getDefaultMetaSchemaName() {
+        return DEFAULT_META_SCHEMA_NAME;
+    }
+
+    public static String getDefaultTempSchemaName() {
+        return DEFAULT_TEMP_SCHEMA_NAME;
+    }
+
+    public static String getDefaultConsoleLogLevel() {
+        return DEFAULT_CONSOLE_LOG_LEVEL;
+    }
+
+    public static String getDefaultFileLogLevel() {
+        return DEFAULT_FILE_LOG_LEVEL;
+    }
+
+    public static double getPrivacyEpsilon() {
+        return PRIVACY_EPSILON;
+    }
+
+    public static double getPrivacyDelta() {
+        return PRIVACY_DELTA;
+    }
+
+    public static boolean isPrivacyEnabled() {return ENABLE_PRIVACY; }
+
+    public void parseConnectionString(String str) {
+        String[] tokens = str.split("[&;?]");
+        String pattern = "\\w+=\\w+";
+        Pattern p = Pattern.compile(pattern);
+        for (String token : tokens) {
+            Matcher m = p.matcher(token);
+            if (m.matches()) {
+                String[] option = token.split("=");
+                switch (option[0].toLowerCase()) {
+                    case "verdictdbmetaschema":
+                        this.setVerdictMetaSchemaName(option[1]);
+                        break;
+                    case "verdictdbtempschema":
+                        this.setVerdictTempSchemaName(option[1]);
+                        break;
+                    case "loglevel":
+                        this.setVerdictConsoleLogLevel(option[1]);
+                        break;
+                    case "file_loglevel":
+                        this.setVerdictFileLogLevel(option[1]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    public void parseProperties(Properties prop) {
+        // Get properties here
+        String newVerdictMetaSchemaName = prop.getProperty("verdictdbmetaschema");
+        String newVerdictTempSchemaName = prop.getProperty("verdictdbtempschema");
+
+        // Set them if properties exist
+        if (newVerdictMetaSchemaName != null) verdictMetaSchemaName = newVerdictMetaSchemaName;
+        if (newVerdictTempSchemaName != null) verdictTempSchemaName = newVerdictTempSchemaName;
+    }
 }

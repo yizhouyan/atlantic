@@ -61,7 +61,7 @@ public abstract class ScramblingMethodBase implements ScramblingMethod, Serializ
     this.maxBlockCount = 1;
   }
 
-  long getBlockSize() {
+  public long getBlockSize() {
     return blockSize;
   }
 

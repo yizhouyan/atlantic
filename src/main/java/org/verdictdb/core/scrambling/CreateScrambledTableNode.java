@@ -58,6 +58,8 @@ public class CreateScrambledTableNode extends QueryNodeWithPlaceHolders {
 
   protected UnnamedColumn predicate;
 
+  protected PrivacyMeta privacyMeta;
+
   public CreateScrambledTableNode(IdCreator namer, SelectQuery query) {
     super(namer, query);
     this.namer = namer;
@@ -73,7 +75,8 @@ public class CreateScrambledTableNode extends QueryNodeWithPlaceHolders {
       String blockColumnName,
       UnnamedColumn predicate,
       List<String> existingPartitionColumns,
-      boolean createIfNotExists) {
+      boolean createIfNotExists,
+      PrivacyMeta privacyMeta) {
     super(namer, query);
     this.namer = namer;
     this.originalSchemaName = originalSchemaName;
@@ -84,6 +87,7 @@ public class CreateScrambledTableNode extends QueryNodeWithPlaceHolders {
     this.predicate = predicate;
     this.partitionColumns.addAll(existingPartitionColumns);
     this.createIfNotExists = createIfNotExists;
+    this.privacyMeta = privacyMeta;
   }
 
   public static CreateScrambledTableNode create(IdCreator namer, SelectQuery query) {

@@ -82,7 +82,7 @@ public class FastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(mysqlConn);
@@ -119,7 +119,7 @@ public class FastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(mysqlConn);
@@ -159,7 +159,7 @@ public class FastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(mysqlConn);
@@ -194,7 +194,7 @@ public class FastConvergeScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(mysqlConn);

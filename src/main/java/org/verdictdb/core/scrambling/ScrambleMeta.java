@@ -46,326 +46,341 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
-  "schemaName",
-  "tableName",
-  "originalSchemaName",
-  "originalTableName",
-  "aggregationBlockColumn",
-  "aggregationBlockCount",
-  "tierColumn",
-  "numberOfTiers",
-  "method",
-  "hashcolumn",
-  "scramblingMethod"
+        "schemaName",
+        "tableName",
+        "originalSchemaName",
+        "originalTableName",
+        "aggregationBlockColumn",
+        "aggregationBlockCount",
+        "tierColumn",
+        "numberOfTiers",
+        "method",
+        "hashcolumn",
+        "scramblingMethod",
+        "privacyMeta"
 })
 public class ScrambleMeta implements Serializable {
 
-  private static final long serialVersionUID = -8422601151874567149L;
+    private static final long serialVersionUID = -8422601151874567149L;
 
-  // key
-  String schemaName;
+    // key
+    String schemaName;
 
-  String tableName;
+    String tableName;
 
-  // aggregation block
-  String aggregationBlockColumn; // agg block number (0 to count-1)
+    // aggregation block
+    String aggregationBlockColumn; // agg block number (0 to count-1)
 
-  int aggregationBlockCount; // agg block total count
+    int aggregationBlockCount; // agg block total count
 
-  // tier
-  String tierColumn;
+    // tier
+    String tierColumn;
 
-  int numberOfTiers;
+    int numberOfTiers;
 
-  // reference to the original tables
-  String originalSchemaName;
+    // reference to the original tables
+    String originalSchemaName;
 
-  String originalTableName;
+    String originalTableName;
 
-  // scramble method used
-  String method;
+    // scramble method used
+    String method;
 
-  // actual scrambling method obj
-  ScramblingMethodBase scramblingMethod;
+    // actual scrambling method obj
+    ScramblingMethodBase scramblingMethod;
 
-  // the column on which a hash function is used (only applicable to hash sampling).
-  String hashColumn;
+    // the column on which a hash function is used (only applicable to hash sampling).
+    String hashColumn;
 
-  /**
-   * The probability mass function of the sizes of the aggregation blocks for a tier. The key is the
-   * id of a tier (e.g., 0, 1, ..., 3), and the list is the cumulative distribution. The length of
-   * the cumulative distribution must be equal to aggregationBlockCount.
-   */
-  @JsonProperty("cumulativeDistributions")
-  Map<Integer, List<Double>> cumulativeDistributionForTier = new HashMap<>();
+    // privacy related metadata (max/min for each column)
+    PrivacyMeta privacyMeta;
 
-  // subsample column; not used currently
-  @JsonIgnore String subsampleColumn;
+    /**
+     * The probability mass function of the sizes of the aggregation blocks for a tier. The key is the
+     * id of a tier (e.g., 0, 1, ..., 3), and the list is the cumulative distribution. The length of
+     * the cumulative distribution must be equal to aggregationBlockCount.
+     */
+    @JsonProperty("cumulativeDistributions")
+    Map<Integer, List<Double>> cumulativeDistributionForTier = new HashMap<>();
 
-  public ScrambleMeta() {}
+    // subsample column; not used currently
+    @JsonIgnore
+    String subsampleColumn;
 
-  public ScrambleMeta(
-      String scrambleSchemaName,
-      String scrambleTableName,
-      String originalSchemaName,
-      String originalTableName,
-      String blockColumn,
-      int blockCount,
-      String tierColumn,
-      int tierCount,
-      Map<Integer, List<Double>> cumulativeMassDistributionPerTier)
-      throws VerdictDBValueException {
-
-    if (tierCount != cumulativeMassDistributionPerTier.size()) {
-      throw new VerdictDBValueException("The number of tiers don't match.");
-    }
-    for (Entry<Integer, List<Double>> p : cumulativeMassDistributionPerTier.entrySet()) {
-      List<Double> dist = p.getValue();
-      if (dist == null) {
-        throw new VerdictDBValueException("NULL is passed for a cumulative distribution.");
-      }
-      if (blockCount != dist.size()) {
-        throw new VerdictDBValueException("The number of blocks don't match.");
-      }
+    public ScrambleMeta() {
     }
 
-    this.schemaName = scrambleSchemaName;
-    this.tableName = scrambleTableName;
-    this.aggregationBlockColumn = blockColumn;
-    this.aggregationBlockCount = blockCount;
-    this.tierColumn = tierColumn;
-    this.numberOfTiers = tierCount;
-    this.originalSchemaName = originalSchemaName;
-    this.originalTableName = originalTableName;
-    this.cumulativeDistributionForTier = cumulativeMassDistributionPerTier;
-  }
+    public ScrambleMeta(
+            String scrambleSchemaName,
+            String scrambleTableName,
+            String originalSchemaName,
+            String originalTableName,
+            String blockColumn,
+            int blockCount,
+            String tierColumn,
+            int tierCount,
+            Map<Integer, List<Double>> cumulativeMassDistributionPerTier)
+            throws VerdictDBValueException {
 
-  public ScrambleMeta(
-      String scrambleSchemaName,
-      String scrambleTableName,
-      String originalSchemaName,
-      String originalTableName,
-      String blockColumn,
-      int blockCount,
-      String tierColumn,
-      int tierCount,
-      Map<Integer, List<Double>> cumulativeMassDistributionPerTier,
-      String method,
-      String hashColumn)
-      throws VerdictDBValueException {
-    this(
-        scrambleSchemaName,
-        scrambleTableName,
-        originalSchemaName,
-        originalTableName,
-        blockColumn,
-        blockCount,
-        tierColumn,
-        tierCount,
-        cumulativeMassDistributionPerTier);
+        if (tierCount != cumulativeMassDistributionPerTier.size()) {
+            throw new VerdictDBValueException("The number of tiers don't match.");
+        }
+        for (Entry<Integer, List<Double>> p : cumulativeMassDistributionPerTier.entrySet()) {
+            List<Double> dist = p.getValue();
+            if (dist == null) {
+                throw new VerdictDBValueException("NULL is passed for a cumulative distribution.");
+            }
+            if (blockCount != dist.size()) {
+                throw new VerdictDBValueException("The number of blocks don't match.");
+            }
+        }
 
-    this.method = method;
-    this.hashColumn = hashColumn;
-  }
-
-  public ScrambleMeta(
-      String scrambleSchemaName,
-      String scrambleTableName,
-      String originalSchemaName,
-      String originalTableName,
-      String blockColumn,
-      int blockCount,
-      String tierColumn,
-      int tierCount,
-      Map<Integer, List<Double>> cumulativeMassDistributionPerTier,
-      String method,
-      String hashColumn,
-      ScramblingMethodBase scramblingMethod)
-      throws VerdictDBValueException {
-
-    this(
-        scrambleSchemaName,
-        scrambleTableName,
-        originalSchemaName,
-        originalTableName,
-        blockColumn,
-        blockCount,
-        tierColumn,
-        tierCount,
-        cumulativeMassDistributionPerTier);
-
-    this.method = method;
-    this.hashColumn = hashColumn;
-    this.scramblingMethod = scramblingMethod;
-  }
-
-  public String getAggregationBlockColumn() {
-    return aggregationBlockColumn;
-  }
-
-  public int getAggregationBlockCount() {
-    return aggregationBlockCount;
-  }
-
-  public List<Double> getCumulativeDistributionForTier(int tier) {
-    return cumulativeDistributionForTier.get(tier);
-  }
-
-  public int getNumberOfTiers() {
-    return numberOfTiers;
-  }
-
-  public String getOriginalSchemaName() {
-    return originalSchemaName;
-  }
-
-  public String getOriginalTableName() {
-    return originalTableName;
-  }
-
-  public String getSchemaName() {
-    return schemaName;
-  }
-
-  public String getSubsampleColumn() {
-    return subsampleColumn;
-  }
-
-  public String getTableName() {
-    return tableName;
-  }
-
-  public String getTierColumn() {
-    return tierColumn;
-  }
-
-  public String getMethod() {
-    return method;
-  }
-
-  @JsonIgnore
-  public String getMethodWithDefault(String defaultMethod) {
-    if (method == null) {
-      return defaultMethod;
-    } else {
-      return method;
+        this.schemaName = scrambleSchemaName;
+        this.tableName = scrambleTableName;
+        this.aggregationBlockColumn = blockColumn;
+        this.aggregationBlockCount = blockCount;
+        this.tierColumn = tierColumn;
+        this.numberOfTiers = tierCount;
+        this.originalSchemaName = originalSchemaName;
+        this.originalTableName = originalTableName;
+        this.cumulativeDistributionForTier = cumulativeMassDistributionPerTier;
     }
-  }
 
-  /**
-   * Checks if this scramble can be used for avg, sum, count, min, or max.
-   *
-   * @return True if it is the case
-   */
-  @JsonIgnore
-  public boolean isMethodCompatibleWithSimpleAggregates() {
-    String m = getMethodWithDefault("uniform");
-    return m.equalsIgnoreCase("uniform") || m.equalsIgnoreCase("fastconverge");
-  }
+    public ScrambleMeta(
+            String scrambleSchemaName,
+            String scrambleTableName,
+            String originalSchemaName,
+            String originalTableName,
+            String blockColumn,
+            int blockCount,
+            String tierColumn,
+            int tierCount,
+            Map<Integer, List<Double>> cumulativeMassDistributionPerTier,
+            String method,
+            String hashColumn)
+            throws VerdictDBValueException {
+        this(
+                scrambleSchemaName,
+                scrambleTableName,
+                originalSchemaName,
+                originalTableName,
+                blockColumn,
+                blockCount,
+                tierColumn,
+                tierCount,
+                cumulativeMassDistributionPerTier);
 
-  public String getHashColumn() {
-    return hashColumn;
-  }
-
-  public void setAggregationBlockColumn(String aggregationBlockColumn) {
-    this.aggregationBlockColumn = aggregationBlockColumn;
-  }
-
-  public void setAggregationBlockCount(int aggregationBlockCount) {
-    this.aggregationBlockCount = aggregationBlockCount;
-  }
-
-  public Map<Integer, List<Double>> getCumulativeDistributionForTier() {
-    return cumulativeDistributionForTier;
-  }
-
-  public void setCumulativeDistributionForTier(
-      Map<Integer, List<Double>> cumulativeDistributionForTier) {
-    this.cumulativeDistributionForTier = cumulativeDistributionForTier;
-  }
-
-  public void setNumberOfTiers(int numberOfTiers) {
-    this.numberOfTiers = numberOfTiers;
-  }
-
-  public void setOriginalSchemaName(String originalSchemaName) {
-    this.originalSchemaName = originalSchemaName;
-  }
-
-  public void setOriginalTableName(String originalTableName) {
-    this.originalTableName = originalTableName;
-  }
-
-  public void setSchemaName(String schemaName) {
-    this.schemaName = schemaName;
-  }
-
-  public void setSubsampleColumn(String subsampleColumn) {
-    this.subsampleColumn = subsampleColumn;
-  }
-
-  public void setTableName(String tableName) {
-    this.tableName = tableName;
-  }
-
-  public void setMethod(String method) {
-    this.method = method;
-  }
-
-  public void setHashColumn(String hashColumn) {
-    this.hashColumn = hashColumn;
-  }
-
-  public void setTierColumn(String tierColumn) {
-    this.tierColumn = tierColumn;
-  }
-
-  public ScramblingMethod getScramblingMethod() {
-    return scramblingMethod;
-  }
-
-  public void setScramblingMethod(ScramblingMethodBase scramblingMethod) {
-    this.scramblingMethod = scramblingMethod;
-  }
-
-  public String toJsonString() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    String jsonString;
-    try {
-      jsonString = objectMapper.writeValueAsString(this);
-      return jsonString;
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-      return null;
+        this.method = method;
+        this.hashColumn = hashColumn;
     }
-  }
 
-  public static ScrambleMeta fromJsonString(String jsonString) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    try {
-      ScrambleMeta meta = objectMapper.readValue(jsonString, ScrambleMeta.class);
-      return meta;
-    } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+    public ScrambleMeta(
+            String scrambleSchemaName,
+            String scrambleTableName,
+            String originalSchemaName,
+            String originalTableName,
+            String blockColumn,
+            int blockCount,
+            String tierColumn,
+            int tierCount,
+            Map<Integer, List<Double>> cumulativeMassDistributionPerTier,
+            String method,
+            String hashColumn,
+            ScramblingMethodBase scramblingMethod,
+            PrivacyMeta privacyMeta)
+            throws VerdictDBValueException {
+
+        this(
+                scrambleSchemaName,
+                scrambleTableName,
+                originalSchemaName,
+                originalTableName,
+                blockColumn,
+                blockCount,
+                tierColumn,
+                tierCount,
+                cumulativeMassDistributionPerTier);
+        this.privacyMeta = privacyMeta;
+        this.method = method;
+        this.hashColumn = hashColumn;
+        this.scramblingMethod = scramblingMethod;
     }
-  }
 
-  @Override
-  public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
-  }
+    public String getAggregationBlockColumn() {
+        return aggregationBlockColumn;
+    }
 
-  @Override
-  public boolean equals(Object obj) {
-    return EqualsBuilder.reflectionEquals(this, obj);
-  }
+    public int getAggregationBlockCount() {
+        return aggregationBlockCount;
+    }
 
-  @Override
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-  }
+    public List<Double> getCumulativeDistributionForTier(int tier) {
+        return cumulativeDistributionForTier.get(tier);
+    }
+
+    public int getNumberOfTiers() {
+        return numberOfTiers;
+    }
+
+    public String getOriginalSchemaName() {
+        return originalSchemaName;
+    }
+
+    public String getOriginalTableName() {
+        return originalTableName;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public String getSubsampleColumn() {
+        return subsampleColumn;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public String getTierColumn() {
+        return tierColumn;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    @JsonIgnore
+    public String getMethodWithDefault(String defaultMethod) {
+        if (method == null) {
+            return defaultMethod;
+        } else {
+            return method;
+        }
+    }
+
+    /**
+     * Checks if this scramble can be used for avg, sum, count, min, or max.
+     *
+     * @return True if it is the case
+     */
+    @JsonIgnore
+    public boolean isMethodCompatibleWithSimpleAggregates() {
+        String m = getMethodWithDefault("uniform");
+        return m.equalsIgnoreCase("uniform") || m.equalsIgnoreCase("fastconverge");
+    }
+
+    public String getHashColumn() {
+        return hashColumn;
+    }
+
+    public void setAggregationBlockColumn(String aggregationBlockColumn) {
+        this.aggregationBlockColumn = aggregationBlockColumn;
+    }
+
+    public void setAggregationBlockCount(int aggregationBlockCount) {
+        this.aggregationBlockCount = aggregationBlockCount;
+    }
+
+    public Map<Integer, List<Double>> getCumulativeDistributionForTier() {
+        return cumulativeDistributionForTier;
+    }
+
+    public void setCumulativeDistributionForTier(
+            Map<Integer, List<Double>> cumulativeDistributionForTier) {
+        this.cumulativeDistributionForTier = cumulativeDistributionForTier;
+    }
+
+    public void setNumberOfTiers(int numberOfTiers) {
+        this.numberOfTiers = numberOfTiers;
+    }
+
+    public void setOriginalSchemaName(String originalSchemaName) {
+        this.originalSchemaName = originalSchemaName;
+    }
+
+    public void setOriginalTableName(String originalTableName) {
+        this.originalTableName = originalTableName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    public void setSubsampleColumn(String subsampleColumn) {
+        this.subsampleColumn = subsampleColumn;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public void setHashColumn(String hashColumn) {
+        this.hashColumn = hashColumn;
+    }
+
+    public void setTierColumn(String tierColumn) {
+        this.tierColumn = tierColumn;
+    }
+
+    public ScramblingMethod getScramblingMethod() {
+        return scramblingMethod;
+    }
+
+    public void setScramblingMethod(ScramblingMethodBase scramblingMethod) {
+        this.scramblingMethod = scramblingMethod;
+    }
+
+    public PrivacyMeta getPrivacyMeta() {
+        return privacyMeta;
+    }
+
+    public void setPrivacyMeta(PrivacyMeta privacyMeta) {
+        this.privacyMeta = privacyMeta;
+    }
+
+    public String toJsonString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        String jsonString;
+        try {
+            jsonString = objectMapper.writeValueAsString(this);
+            return jsonString;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ScrambleMeta fromJsonString(String jsonString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        try {
+            ScrambleMeta meta = objectMapper.readValue(jsonString, ScrambleMeta.class);
+            return meta;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    }
 }

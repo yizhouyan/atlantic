@@ -107,7 +107,7 @@ public class InMemoryAggregate {
           + ") VALUES ("
           + bindVariables
           + ")";
-//      log.info(sql);
+      log.trace(sql);
       pstmt = conn.prepareStatement(sql);
       while (dbmsQueryResult.next()) {
         for (int i = 1; i <= dbmsQueryResult.getColumnCount(); i++) {

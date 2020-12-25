@@ -18,10 +18,7 @@ package org.verdictdb.coordinator;
 
 import static org.verdictdb.coordinator.VerdictSingleResultFromListData.createWithSingleColumn;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -58,6 +55,7 @@ import org.verdictdb.metastore.VerdictMetaStore;
 import org.verdictdb.parser.VerdictSQLParser;
 import org.verdictdb.parser.VerdictSQLParser.IdContext;
 import org.verdictdb.parser.VerdictSQLParserBaseVisitor;
+import org.verdictdb.privacy.DPNoiseEstimator;
 import org.verdictdb.sqlreader.CondGen;
 import org.verdictdb.sqlreader.NonValidatingSQLParser;
 import org.verdictdb.sqlreader.RelationGen;
@@ -327,12 +325,14 @@ public class ExecutionContext {
     }
     QueryResultAccuracyEstimator accEst =
         new QueryResultAccuracyEstimatorFromDifference(selectQuery);
-
+//    DPNoiseEstimator dpNoiseEst = new DPNoiseEstimator(selectQuery, metaStore);
     try {
       while (stream.hasNext()) {
         VerdictSingleResult rs = stream.next();
+//        VerdictSingleResult rsWithNoise = dpNoiseEst.addNoiseToSingleResult(rs);
         accEst.add(rs);
         if (accEst.isLastResultAccurate()) {
+          log.debug("Current result is accurate, returning current result...");
           return rs;
         }
       }
@@ -391,8 +391,6 @@ public class ExecutionContext {
    * @throws VerdictDBException
    */
   private VerdictResultStream streamSelectQuery(SelectQuery selectQuery) throws VerdictDBException {
-    //    selectQuery = standardizeSelectQuery(selectQuery, conn);
-
     ScrambleMetaSet metaset = metaStore.retrieve();
     SelectQueryCoordinator coordinator = new SelectQueryCoordinator(conn, metaset, options);
     runningCoordinator = null;

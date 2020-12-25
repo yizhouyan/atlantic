@@ -84,7 +84,7 @@ public class PostgresUniformScramblingPlanTest {
         ScramblingPlan.create(
             newSchemaName, newTableName,
             oldSchemaName, oldTableName,
-            method, options);
+            method, options, new PrivacyMeta());
     //    System.out.println(plan.getReportingNode());
 
     DbmsConnection dbmsConn = JdbcConnection.create(conn);
@@ -126,7 +126,7 @@ public class PostgresUniformScramblingPlanTest {
         ScramblingPlan.create(
             newSchemaName, newTableName,
             oldSchemaName, oldTableName,
-            method, options);
+            method, options, new PrivacyMeta());
     //    System.out.println(plan.getReportingNode());
 
     DbmsConnection dbmsConn = JdbcConnection.create(conn);

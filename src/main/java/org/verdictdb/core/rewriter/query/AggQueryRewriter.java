@@ -482,7 +482,6 @@ public class AggQueryRewriter {
       UnnamedColumn tierColumnOfSource)
       //      UnnamedColumn inclusionProbabilityColumn)
       throws VerdictDBException {
-
     SelectQuery rewrittenOuter = new SelectQuery();
     SelectQuery rewrittenInner = new SelectQuery();
     String innerTableAliasName = generateNextAliasName();

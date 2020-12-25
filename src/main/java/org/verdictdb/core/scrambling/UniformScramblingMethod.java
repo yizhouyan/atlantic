@@ -83,7 +83,6 @@ public class UniformScramblingMethod extends ScramblingMethodBase {
 
   private List<Double> calculateBlockCountsAndCumulativeProbabilityDistForTier(
       Map<String, Object> metaData, int tier) {
-
     DbmsQueryResult tableSizeResult =
         (DbmsQueryResult) metaData.get(TableSizeCountNode.class.getSimpleName());
     tableSizeResult.next();

@@ -143,7 +143,6 @@ public class QueryResultAccuracyEstimatorFromDifference extends QueryResultAccur
     // some variables we will use in this function
     HashMap<List<Object>, List<Object>> newAggregatedMap = new HashMap<>();
     VerdictSingleResult currentAnswer = answers.get(answers.size() - 1);
-    
     while (currentAnswer.next()) {
       List<Object> aggregateValues = new ArrayList<>();
       List<Object> groupValues = new ArrayList<>();
@@ -217,7 +216,7 @@ public class QueryResultAccuracyEstimatorFromDifference extends QueryResultAccur
     
     // replaces the old values with the new values
     groupToNonGroupMap = newAggregatedMap;
-
+    log.debug("groupToNonGroupMap = " + groupToNonGroupMap);
     return isValueConverged;
   }
 

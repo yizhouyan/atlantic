@@ -243,12 +243,12 @@ public class ColumnOp implements UnnamedColumn, SelectItem {
     return new ColumnOp("lessequal", Arrays.asList(column1, column2));
   }
 
-  public static ColumnOp min(UnnamedColumn column1, UnnamedColumn column2) {
-    return new ColumnOp("min", Arrays.asList(column1, column2));
+  public static ColumnOp min(UnnamedColumn column1) {
+    return new ColumnOp("min", Arrays.asList(column1));
   }
 
-  public static ColumnOp max(UnnamedColumn column1, UnnamedColumn column2) {
-    return new ColumnOp("max", Arrays.asList(column1, column2));
+  public static ColumnOp max(UnnamedColumn column1) {
+    return new ColumnOp("max", Arrays.asList(column1));
   }
 
   public static ColumnOp percentile(UnnamedColumn column1, UnnamedColumn column2) {
@@ -458,6 +458,11 @@ public class ColumnOp implements UnnamedColumn, SelectItem {
 
   public boolean isUniformSampleAggregateColumn() {
     Set<String> ops = new HashSet<>(Arrays.asList("avg", "sum", "count", "max", "min"));
+    return doesContainOpIn(ops);
+  }
+
+  public boolean isPrivacySupportedAggregateColumn(){
+    Set<String> ops = new HashSet<>(Arrays.asList("avg", "sum", "count"));
     return doesContainOpIn(ops);
   }
 

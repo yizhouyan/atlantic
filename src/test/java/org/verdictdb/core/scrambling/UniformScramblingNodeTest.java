@@ -134,7 +134,7 @@ public class UniformScramblingNodeTest {
     ScramblingNode node = ScramblingNode.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, predicate, options);
+        method, predicate, options, new PrivacyMeta());
 
     // set tokens
     List<ExecutionInfoToken> tokens = new ArrayList<>();
@@ -189,7 +189,7 @@ public class UniformScramblingNodeTest {
     ScramblingNode node = ScramblingNode.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options);
+        method, options, new PrivacyMeta());
 
     // set tokens
     List<ExecutionInfoToken> tokens = new ArrayList<>();

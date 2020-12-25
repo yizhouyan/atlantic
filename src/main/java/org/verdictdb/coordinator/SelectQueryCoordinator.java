@@ -19,6 +19,7 @@ package org.verdictdb.coordinator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.commons.VerdictOption;
@@ -26,6 +27,7 @@ import org.verdictdb.connection.DbmsConnection;
 import org.verdictdb.core.execplan.ExecutablePlanRunner;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.execplan.ExecutionTokenQueue;
+import org.verdictdb.core.querying.ExecutableNodeBase;
 import org.verdictdb.core.querying.QueryExecutionPlan;
 import org.verdictdb.core.querying.QueryExecutionPlanFactory;
 import org.verdictdb.core.querying.ola.AsyncQueryExecutionPlan;
@@ -117,7 +119,6 @@ public class SelectQueryCoordinator implements Coordinator {
 
   public ExecutionResultReader process(SelectQuery selectQuery, QueryContext context)
       throws VerdictDBException {
-
     // create scratchpad schema if not exists
     if (!conn.getSchemas().contains(scratchpadSchema)) {
       log.info(
@@ -148,6 +149,7 @@ public class SelectQueryCoordinator implements Coordinator {
     // original query.
     QueryExecutionPlan plan =
         QueryExecutionPlanFactory.create(scratchpadSchema, scrambleMetaSet, fasterQuery, context);
+    log.debug("Plan created. ");
 
     // convert it to an asynchronous plan
     // if the plan does not include any aggregates, this operation should not alter the original
@@ -160,6 +162,7 @@ public class SelectQueryCoordinator implements Coordinator {
     QueryExecutionPlanSimplifier.simplify2(asyncPlan);
     log.debug("Plan simplification done.");
     log.trace(asyncPlan.getRoot().getStructure());
+    log.debug("Number of executions = " + asyncPlan.getRoot().getSources().size());
 
     // execute the plan
     planRunner = new ExecutablePlanRunner(conn, asyncPlan);
