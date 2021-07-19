@@ -1,66 +1,48 @@
 package org.verdictdb.core.scrambling;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.commons.VerdictDBLogger;
-import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.core.querying.ExecutableNodeBase;
-import org.verdictdb.core.sqlobject.UnnamedColumn;
 import org.verdictdb.exception.VerdictDBException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 
 public class PrivacyMeta implements Serializable {
     private static final long serialVersionUID = -5868149128257905562L;
-    Map<String, BigDecimal> columnMin = new HashMap<>();
-    Map<String, BigDecimal> columnMax = new HashMap<>();
+    public Map<String, BigDecimal> columnMin = new HashMap<>();
+    public Map<String, BigDecimal> columnMax = new HashMap<>();
+    public Map<String, BigDecimal> privacyMetaMaxFreq = new HashMap<>();
 
     @JsonIgnore
     private VerdictDBLogger log = VerdictDBLogger.getLogger(this.getClass());
 
     public PrivacyMeta() {
+        super();
     }
 
     public List<ExecutableNodeBase> getStatisticsNode(
             String oldSchemaName,
             String oldTableName,
-            String columnMetaTokenKey) {
-        PrivacyStatisticsRetrievalNode countNode =
-                new PrivacyStatisticsRetrievalNode(oldSchemaName, oldTableName, columnMetaTokenKey);
-        return Arrays.<ExecutableNodeBase>asList(countNode);
+            String columnMetaTokenKey,
+            List<Pair<String, String>> columnNamesAndTypes) {
+        List<ExecutableNodeBase> statisticsNodes = new ArrayList<>();
+        PrivacyColMinMaxRetrievalNode countNode =
+                new PrivacyColMinMaxRetrievalNode(oldSchemaName, oldTableName, columnMetaTokenKey);
+        statisticsNodes.add(countNode);
+        for (Pair<String, String> nameAndType : columnNamesAndTypes) {
+            String colName = nameAndType.getLeft();
+            PrivacyMaxFreqRetrievalNode maxFreqNode = new PrivacyMaxFreqRetrievalNode(oldSchemaName, oldTableName, colName);
+            statisticsNodes.add(maxFreqNode);
+        }
+        return statisticsNodes;
     }
 
     public void extractPrivacyMeta(Map<String, Object> metaData) throws VerdictDBException {
-        DbmsQueryResult privacyMetaResult =
-                (DbmsQueryResult) metaData.get(PrivacyStatisticsRetrievalNode.class.getSimpleName());
-        privacyMetaResult.next();
-        int numColmns = privacyMetaResult.getColumnCount();
-        List<String> columnNames = new ArrayList<>();
-        for (int i = 0; i < numColmns; i++) {
-            columnNames.add(privacyMetaResult.getColumnName(i));
-        }
-        if (columnNames.contains(PrivacyStatisticsRetrievalNode.PRIVACY_STATS_DUMMPY_COL)) {
-            log.debug("Dummy meta detected, no meta data for privacy computation. ");
-        } else {
-            log.debug(String.format("%d columns detected. %s", numColmns, columnNames));
-            for (int i = 0; i < numColmns; i++) {
-                String privacyColName = privacyMetaResult.getColumnName(i);
-                BigDecimal columnValue = privacyMetaResult.getBigDecimal(i);
-                Pair<String, String> columnMethodAndName = PrivacyStatisticsRetrievalNode.getMethodAndColName(privacyColName);
-                if (columnMethodAndName.getLeft().equals("min")) {
-                    columnMin.put(columnMethodAndName.getRight(), columnValue);
-                } else if (columnMethodAndName.getLeft().equals("max")) {
-                    columnMax.put(columnMethodAndName.getRight(), columnValue);
-                } else {
-                    throw new VerdictDBException("Privacy Statistic methods should be either max or min.");
-                }
-            }
-        }
+        PrivacyColMinMaxRetrievalNode.extractMinMaxPrivacyMeta(metaData, columnMin, columnMax);
+        PrivacyMaxFreqRetrievalNode.extractMaxFreqPrivacyMeta(metaData,privacyMetaMaxFreq);
     }
-
 }

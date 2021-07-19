@@ -20,6 +20,9 @@ import static org.verdictdb.coordinator.VerdictSingleResultFromListData.createWi
 
 import java.util.*;
 
+import org.verdictdb.core.scrambling.ScrambleMeta;
+import org.verdictdb.privacy.DPDriver;
+import org.verdictdb.privacy.DPRelatedTableMetaDataSet;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.VerdictResultStream;
@@ -34,7 +37,6 @@ import org.verdictdb.connection.StaticMetaData;
 import org.verdictdb.core.resulthandler.ExecutionResultReader;
 import org.verdictdb.core.scrambling.FastConvergeScramblingMethod;
 import org.verdictdb.core.scrambling.HashScramblingMethod;
-import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.scrambling.ScramblingMethod;
 import org.verdictdb.core.scrambling.UniformScramblingMethod;
@@ -55,7 +57,6 @@ import org.verdictdb.metastore.VerdictMetaStore;
 import org.verdictdb.parser.VerdictSQLParser;
 import org.verdictdb.parser.VerdictSQLParser.IdContext;
 import org.verdictdb.parser.VerdictSQLParserBaseVisitor;
-import org.verdictdb.privacy.DPNoiseEstimator;
 import org.verdictdb.sqlreader.CondGen;
 import org.verdictdb.sqlreader.NonValidatingSQLParser;
 import org.verdictdb.sqlreader.RelationGen;
@@ -325,15 +326,18 @@ public class ExecutionContext {
     }
     QueryResultAccuracyEstimator accEst =
         new QueryResultAccuracyEstimatorFromDifference(selectQuery);
-//    DPNoiseEstimator dpNoiseEst = new DPNoiseEstimator(selectQuery, metaStore);
+    ScrambleMetaSet scrambleMetaSet = metaStore.retrieve();
+    DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet =
+            DPRelatedTableMetaDataSet.createFromScrambleMetaSet(scrambleMetaSet);
+    DPDriver dpNoiseEst = new DPDriver(selectQuery, scrambleMetaSet, dpRelatedTableMetaDataSet);
     try {
       while (stream.hasNext()) {
         VerdictSingleResult rs = stream.next();
-//        VerdictSingleResult rsWithNoise = dpNoiseEst.addNoiseToSingleResult(rs);
-        accEst.add(rs);
+        VerdictSingleResult rsWithNoise = dpNoiseEst.addNoiseToSingleResult(rs);
+        accEst.add(rsWithNoise);
         if (accEst.isLastResultAccurate()) {
           log.debug("Current result is accurate, returning current result...");
-          return rs;
+          return rsWithNoise;
         }
       }
       // return the last result otherwise

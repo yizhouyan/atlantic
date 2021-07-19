@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
-import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.exception.VerdictDBValueException;
 

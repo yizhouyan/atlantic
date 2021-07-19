@@ -21,10 +21,10 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.verdictdb.commons.DatabaseConnectionHelpers;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.verdictdb.commons.DatabaseConnectionHelpers;
 import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.connection.CachedDbmsConnection;
 import org.verdictdb.exception.VerdictDBException;

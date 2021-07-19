@@ -30,15 +30,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.verdictdb.commons.DatabaseConnectionHelpers;
+import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.verdictdb.commons.DatabaseConnectionHelpers;
 import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.connection.JdbcConnection;
-import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.verdictdb.exception.VerdictDBDbmsException;
 import org.verdictdb.metastore.ScrambleMetaStore;
 

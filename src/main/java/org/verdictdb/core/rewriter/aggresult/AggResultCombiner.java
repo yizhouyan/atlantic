@@ -16,8 +16,8 @@
 
 package org.verdictdb.core.rewriter.aggresult;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.aggresult.AggregateFrame;
+import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.rewriter.query.AggblockMeta;
 
 public class AggResultCombiner {

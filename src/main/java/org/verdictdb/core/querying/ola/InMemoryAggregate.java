@@ -13,11 +13,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.verdictdb.commons.DataTypeConverter;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.connection.JdbcQueryResult;
+import org.verdictdb.exception.VerdictDBException;
+import org.verdictdb.sqlsyntax.H2Syntax;
+import org.verdictdb.sqlwriter.SelectQueryToSql;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.AliasedColumn;
 import org.verdictdb.core.sqlobject.AsteriskColumn;
@@ -29,9 +32,6 @@ import org.verdictdb.core.sqlobject.SelectItem;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SetOperationRelation;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
-import org.verdictdb.exception.VerdictDBException;
-import org.verdictdb.sqlsyntax.H2Syntax;
-import org.verdictdb.sqlwriter.SelectQueryToSql;
 
 public class InMemoryAggregate {
 

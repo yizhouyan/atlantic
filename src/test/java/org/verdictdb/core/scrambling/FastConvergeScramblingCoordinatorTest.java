@@ -8,15 +8,15 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
+import org.verdictdb.commons.DatabaseConnectionHelpers;
+import org.verdictdb.coordinator.ScramblingCoordinator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.verdictdb.commons.DatabaseConnectionHelpers;
 import org.verdictdb.connection.DbmsConnection;
 import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.connection.JdbcConnection;
-import org.verdictdb.coordinator.ScramblingCoordinator;
 import org.verdictdb.exception.VerdictDBDbmsException;
 import org.verdictdb.exception.VerdictDBException;
 

@@ -23,10 +23,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.commons.DataTypeConverter;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.exception.VerdictDBException;
+import org.verdictdb.exception.VerdictDBValueException;
+import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.CreateTableAsSelectNode;
 import org.verdictdb.core.querying.ExecutableNodeBase;
@@ -47,8 +49,6 @@ import org.verdictdb.core.sqlobject.SelectItem;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SqlConvertible;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
-import org.verdictdb.exception.VerdictDBException;
-import org.verdictdb.exception.VerdictDBValueException;
 
 /**
  * Policy: 1. Tier 0: tuples containing outlier values. 2. Tier 1: tuples containing rare groups 3.
@@ -195,7 +195,7 @@ public class FastConvergeScramblingMethod extends ScramblingMethodBase {
   }
 
   static UnnamedColumn createOutlierTuplePredicate(
-      DbmsQueryResult percentileAndCountResult, String sourceTableAlias) {
+          DbmsQueryResult percentileAndCountResult, String sourceTableAlias) {
     boolean printLog = false;
     return createOutlierTuplePredicate(percentileAndCountResult, sourceTableAlias, printLog);
   }

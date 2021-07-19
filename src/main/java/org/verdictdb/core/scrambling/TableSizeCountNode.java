@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.exception.VerdictDBException;
+import org.verdictdb.exception.VerdictDBValueException;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.QueryNodeBase;
 import org.verdictdb.core.sqlobject.AliasedColumn;
@@ -13,8 +15,6 @@ import org.verdictdb.core.sqlobject.SelectItem;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SqlConvertible;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
-import org.verdictdb.exception.VerdictDBException;
-import org.verdictdb.exception.VerdictDBValueException;
 
 class TableSizeCountNode extends QueryNodeBase {
 

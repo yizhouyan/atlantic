@@ -25,12 +25,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.connection.DbmsQueryResultMetaData;
-import org.verdictdb.core.rewriter.aggresult.AggNameAndType;
 import org.verdictdb.exception.VerdictDBValueException;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.verdictdb.core.rewriter.aggresult.AggNameAndType;
 
 /**
  * Represents a data frame (after aggregation).
@@ -68,7 +68,7 @@ public class AggregateFrame implements Serializable {
   }
 
   public static AggregateFrame fromDmbsQueryResult(
-      DbmsQueryResult result, List<String> nonaggColumns, List<AggNameAndType> aggColumns)
+          DbmsQueryResult result, List<String> nonaggColumns, List<AggNameAndType> aggColumns)
       throws VerdictDBValueException {
 
     List<String> colName = new ArrayList<>();

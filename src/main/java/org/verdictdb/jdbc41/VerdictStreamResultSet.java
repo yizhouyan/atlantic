@@ -26,9 +26,9 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
+import org.verdictdb.commons.VerdictDBLogger;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.verdictdb.VerdictSingleResult;
-import org.verdictdb.commons.VerdictDBLogger;
 
 /**
  * Created by: Shucheng Zhong on 9/12/18

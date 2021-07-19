@@ -1,19 +1,20 @@
 package org.verdictdb.core.scrambling;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.QueryNodeBase;
+import org.mit.dbgroup.atlantic.core.sqlobject.*;
 import org.verdictdb.core.sqlobject.*;
 import org.verdictdb.exception.VerdictDBException;
 import org.verdictdb.exception.VerdictDBValueException;
 
+import java.math.BigDecimal;
 import java.util.*;
 
-public class PrivacyStatisticsRetrievalNode extends QueryNodeBase {
+public class PrivacyColMinMaxRetrievalNode extends QueryNodeBase {
     private static final long serialVersionUID = -6227200690897248322L;
     private String schemaName;
     private String tableName;
@@ -24,7 +25,7 @@ public class PrivacyStatisticsRetrievalNode extends QueryNodeBase {
     private static final List<String> supportedColumnTypes =
             new ArrayList<>(Arrays.asList("double", "float", "int", "bigint", "tinyint", "real"));
 
-    public PrivacyStatisticsRetrievalNode(String schemaName, String tableName, String columnMetaTokenKey) {
+    public PrivacyColMinMaxRetrievalNode(String schemaName, String tableName, String columnMetaTokenKey) {
         super(-1, null);
         this.schemaName = schemaName;
         this.tableName = tableName;
@@ -48,6 +49,7 @@ public class PrivacyStatisticsRetrievalNode extends QueryNodeBase {
 
     @Override
     public SqlConvertible createQuery(List<ExecutionInfoToken> tokens) throws VerdictDBException {
+        log.debug("Calling Create in PrivacyColMinMaxRetrievalNode....");
         if (tokens.size() == 0) {
             // no token information passed
             throw new VerdictDBValueException("No token is passed.");
@@ -79,7 +81,7 @@ public class PrivacyStatisticsRetrievalNode extends QueryNodeBase {
             selectQuery = SelectQuery.create(selectList, new BaseTable(schemaName, tableName, tableSourceAlias));
             return selectQuery;
         } else {
-            log.debug("No number columns found. Generate a dummpy query.");
+            log.debug("No number columns found. Generate a dummy query.");
             selectList.add(new AliasedColumn(ConstantColumn.valueOf(1), PRIVACY_STATS_DUMMPY_COL));
             selectQuery = SelectQuery.create(selectList, new BaseTable(schemaName, tableName, tableSourceAlias));
             return selectQuery;
@@ -91,5 +93,37 @@ public class PrivacyStatisticsRetrievalNode extends QueryNodeBase {
         ExecutionInfoToken token = new ExecutionInfoToken();
         token.setKeyValue(this.getClass().getSimpleName(), result);
         return token;
+    }
+
+    public static void extractMinMaxPrivacyMeta(Map<String, Object> metaData,
+                                                Map<String, BigDecimal> columnMin,
+                                                Map<String, BigDecimal> columnMax) throws VerdictDBException {
+        DbmsQueryResult privacyMetaResult =
+                (DbmsQueryResult) metaData.get(PrivacyColMinMaxRetrievalNode.class.getSimpleName());
+        privacyMetaResult.next();
+        int numColmns = privacyMetaResult.getColumnCount();
+        List<String> columnNames = new ArrayList<>();
+        for (int i = 0; i < numColmns; i++) {
+            columnNames.add(privacyMetaResult.getColumnName(i));
+        }
+        if (columnNames.contains(PrivacyColMinMaxRetrievalNode.PRIVACY_STATS_DUMMPY_COL)) {
+            VerdictDBLogger.getLogger(PrivacyColMinMaxRetrievalNode.class)
+                    .debug("Dummy meta detected, no meta data for privacy computation. ");
+        } else {
+            VerdictDBLogger.getLogger(PrivacyColMinMaxRetrievalNode.class)
+                    .debug(String.format("%d columns detected. %s", numColmns, columnNames));
+            for (int i = 0; i < numColmns; i++) {
+                String privacyColName = privacyMetaResult.getColumnName(i);
+                BigDecimal columnValue = privacyMetaResult.getBigDecimal(i);
+                Pair<String, String> columnMethodAndName = PrivacyColMinMaxRetrievalNode.getMethodAndColName(privacyColName);
+                if (columnMethodAndName.getLeft().equals("min")) {
+                    columnMin.put(columnMethodAndName.getRight(), columnValue);
+                } else if (columnMethodAndName.getLeft().equals("max")) {
+                    columnMax.put(columnMethodAndName.getRight(), columnValue);
+                } else {
+                    throw new VerdictDBException("Privacy Statistic methods should be either max or min.");
+                }
+            }
+        }
     }
 }

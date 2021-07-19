@@ -19,6 +19,7 @@ package org.verdictdb.core.querying;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.verdictdb.exception.VerdictDBValueException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.AliasedColumn;
@@ -31,7 +32,6 @@ import org.verdictdb.core.sqlobject.SelectItem;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SubqueryColumn;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
-import org.verdictdb.exception.VerdictDBValueException;
 
 public class SubqueriesToDependentNodes {
 
@@ -42,7 +42,7 @@ public class SubqueriesToDependentNodes {
    * @throws VerdictDBValueException
    */
   public static void convertSubqueriesToDependentNodes(
-      SelectQuery query, CreateTableAsSelectNode node) {
+          SelectQuery query, CreateTableAsSelectNode node) {
     IdCreator namer = node.getNamer();
 
     // from list

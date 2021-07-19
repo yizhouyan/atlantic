@@ -16,12 +16,12 @@
 
 package org.verdictdb.core.sqlobject;
 
+import org.verdictdb.exception.VerdictDBTypeException;
+import org.verdictdb.sqlsyntax.SqlSyntax;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.verdictdb.exception.VerdictDBTypeException;
-import org.verdictdb.sqlsyntax.SqlSyntax;
 
 public class BaseTable extends AbstractRelation {
 

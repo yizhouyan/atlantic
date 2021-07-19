@@ -15,6 +15,7 @@ public class DPRelatedTableMetaData {
     private long blockCount;
     private Map<String, BigDecimal> columnMin = new HashMap<>();
     private Map<String, BigDecimal> columnMax = new HashMap<>();
+    private Map<String, BigDecimal> maxFrequency = new HashMap<>();
 
     private VerdictDBLogger log = VerdictDBLogger.getLogger(this.getClass());
 
@@ -23,10 +24,17 @@ public class DPRelatedTableMetaData {
         ScramblingMethod method = singleMeta.getScramblingMethod();
         blockSize = ((ScramblingMethodBase) method).getBlockSize();
         sampleRate = 1.0 / blockCount;
+        columnMin = singleMeta.getPrivacyColumnMin();
+        columnMax = singleMeta.getPrivacyColumnMax();
+        maxFrequency = singleMeta.getPrivacyMetaMaxFreq();
     }
 
     public double getSampleRate() {
         return sampleRate;
+    }
+
+    public void setSampleRate(double sampleRate){
+        this.sampleRate = sampleRate;
     }
 
     public long getBlockSize() {
@@ -55,5 +63,21 @@ public class DPRelatedTableMetaData {
 
     public BigDecimal getColumnMax(String columnName) {
         return columnMax.get(columnName);
+    }
+
+    public boolean hasColumnMinMax(String columnName) {
+        return columnMin.containsKey(columnName) && columnMax.containsKey(columnName);
+    }
+
+    public boolean hasColumnMax(String columnName){
+        return columnMax.containsKey(columnName);
+    }
+
+    public boolean hasColumnMaxFrequency(String columnName){
+        return maxFrequency.containsKey(columnName);
+    }
+
+    public BigDecimal getColumnMaxFrequency(String columnName){
+        return maxFrequency.get(columnName);
     }
 }

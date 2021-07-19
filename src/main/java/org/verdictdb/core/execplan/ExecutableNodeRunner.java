@@ -17,11 +17,6 @@
 package org.verdictdb.core.execplan;
 
 import org.verdictdb.commons.VerdictDBLogger;
-import org.verdictdb.connection.CachedDbmsConnection;
-import org.verdictdb.connection.DbmsConnection;
-import org.verdictdb.connection.DbmsQueryResult;
-import org.verdictdb.connection.JdbcConnection;
-import org.verdictdb.connection.SparkConnection;
 import org.verdictdb.core.querying.ExecutableNodeBase;
 import org.verdictdb.core.querying.ola.AsyncAggExecutionNode;
 import org.verdictdb.core.querying.ola.SelectAsyncAggExecutionNode;
@@ -32,6 +27,11 @@ import org.verdictdb.exception.VerdictDBException;
 import org.verdictdb.exception.VerdictDBValueException;
 import org.verdictdb.sqlsyntax.MysqlSyntax;
 import org.verdictdb.sqlwriter.QueryToSql;
+import org.verdictdb.connection.CachedDbmsConnection;
+import org.verdictdb.connection.DbmsConnection;
+import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.connection.JdbcConnection;
+import org.verdictdb.connection.SparkConnection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

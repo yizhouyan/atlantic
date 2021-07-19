@@ -6,16 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.core.scrambling.ScrambleMetaSet;
+import org.verdictdb.exception.VerdictDBDbmsException;
+import org.verdictdb.exception.VerdictDBException;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.ExecutableNodeBase;
 import org.verdictdb.core.querying.IdCreator;
 import org.verdictdb.core.querying.QueryNodeBase;
 import org.verdictdb.core.querying.SelectAggExecutionNode;
 import org.verdictdb.core.querying.SubscriptionTicket;
-import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.sqlobject.BaseTable;
 import org.verdictdb.core.sqlobject.ColumnOp;
 import org.verdictdb.core.sqlobject.CreateTableAsSelectQuery;
@@ -23,8 +25,6 @@ import org.verdictdb.core.sqlobject.SelectItem;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SqlConvertible;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
-import org.verdictdb.exception.VerdictDBDbmsException;
-import org.verdictdb.exception.VerdictDBException;
 
 
 /**
@@ -86,7 +86,7 @@ public class SelectAsyncAggExecutionNode extends AsyncAggExecutionNode {
     SelectAsyncAggExecutionNode node = new SelectAsyncAggExecutionNode(idCreator);
 
     // this placeholder base table is used for query construction later
-    Pair<BaseTable, SubscriptionTicket> tableAndTicket = 
+    Pair<BaseTable, SubscriptionTicket> tableAndTicket =
         node.createPlaceHolderTable(INNER_RAW_AGG_TABLE_ALIAS);
     BaseTable placeholderTable = tableAndTicket.getLeft();
     SubscriptionTicket ticket = tableAndTicket.getRight();

@@ -19,16 +19,16 @@ package org.verdictdb.core.querying.ola;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-import org.verdictdb.core.querying.AggExecutionNode;
-import org.verdictdb.core.querying.ExecutableNodeBase;
-import org.verdictdb.core.querying.QueryNodeBase;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.BaseTable;
 import org.verdictdb.core.sqlobject.JoinTable;
 import org.verdictdb.exception.VerdictDBValueException;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+import org.verdictdb.core.querying.AggExecutionNode;
+import org.verdictdb.core.querying.ExecutableNodeBase;
+import org.verdictdb.core.querying.QueryNodeBase;
 
 /**
  * Contains the references to the ExecutionNodes that contain scrambled tables. This does not
@@ -219,7 +219,7 @@ public class AggExecutionNodeBlock {
    *     table, alias) of scrambled tables.
    */
   List<Pair<ExecutableNodeBase, Triple<String, String, String>>> identifyScrambledNodes(
-      ScrambleMetaSet scrambleMeta, List<ExecutableNodeBase> blockNodes) {
+          ScrambleMetaSet scrambleMeta, List<ExecutableNodeBase> blockNodes) {
 
     List<Pair<ExecutableNodeBase, Triple<String, String, String>>> identified = new ArrayList<>();
 

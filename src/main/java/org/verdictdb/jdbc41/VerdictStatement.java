@@ -22,12 +22,12 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 
-import org.verdictdb.VerdictContext;
-import org.verdictdb.VerdictResultStream;
-import org.verdictdb.VerdictSingleResult;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.coordinator.ExecutionContext;
 import org.verdictdb.exception.VerdictDBException;
+import org.verdictdb.VerdictContext;
+import org.verdictdb.VerdictResultStream;
+import org.verdictdb.VerdictSingleResult;
 
 public class VerdictStatement implements java.sql.Statement {
 

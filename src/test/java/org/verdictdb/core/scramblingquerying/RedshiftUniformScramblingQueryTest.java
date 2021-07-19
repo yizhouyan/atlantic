@@ -26,12 +26,12 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.verdictdb.commons.DatabaseConnectionHelpers;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.verdictdb.commons.DatabaseConnectionHelpers;
 import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.exception.VerdictDBDbmsException;
 

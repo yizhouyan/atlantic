@@ -23,16 +23,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.verdictdb.connection.DbmsConnection;
+import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.coordinator.VerdictSingleResultFromDbmsQueryResult;
+import org.verdictdb.core.scrambling.ScrambleMeta;
+import org.verdictdb.sqlwriter.QueryToSql;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.VerdictSingleResult;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.commons.VerdictTimestamp;
-import org.verdictdb.connection.DbmsConnection;
-import org.verdictdb.connection.DbmsQueryResult;
-import org.verdictdb.coordinator.VerdictSingleResultFromDbmsQueryResult;
-import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.sqlobject.BaseColumn;
 import org.verdictdb.core.sqlobject.BaseTable;
@@ -44,7 +45,6 @@ import org.verdictdb.core.sqlobject.OrderbyAttribute;
 import org.verdictdb.core.sqlobject.SelectItem;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.exception.VerdictDBException;
-import org.verdictdb.sqlwriter.QueryToSql;
 
 public class ScrambleMetaStore extends VerdictMetaStore {
 

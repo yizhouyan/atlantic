@@ -22,9 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import org.verdictdb.connection.MetaDataProvider;
+import org.verdictdb.sqlsyntax.H2Syntax;
+import org.verdictdb.sqlsyntax.SqlSyntax;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.verdictdb.connection.MetaDataProvider;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.AliasReference;
 import org.verdictdb.core.sqlobject.AliasedColumn;
@@ -42,8 +44,6 @@ import org.verdictdb.core.sqlobject.SubqueryColumn;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
 import org.verdictdb.exception.VerdictDBDbmsException;
 import org.verdictdb.exception.VerdictDBException;
-import org.verdictdb.sqlsyntax.H2Syntax;
-import org.verdictdb.sqlsyntax.SqlSyntax;
 
 
 public class RelationStandardizer {

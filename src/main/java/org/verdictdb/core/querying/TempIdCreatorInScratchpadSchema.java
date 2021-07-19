@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.coordinator.QueryContext;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class TempIdCreatorInScratchpadSchema implements IdCreator, Serializable {
 

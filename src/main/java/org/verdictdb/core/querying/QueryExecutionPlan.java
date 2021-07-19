@@ -28,12 +28,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.execplan.ExecutableNode;
 import org.verdictdb.core.execplan.ExecutablePlan;
-import org.verdictdb.core.scrambling.ScrambleMetaSet;
 
 public class QueryExecutionPlan implements ExecutablePlan, IdCreator, Serializable {
 

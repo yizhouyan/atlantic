@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.sql.SQLException;
 
 import org.junit.Test;
-import org.verdictdb.coordinator.ExecutionContext.QueryType;
 import org.verdictdb.exception.VerdictDBException;
 
 public class CreateScrambleSyntaxTest {
@@ -17,7 +16,7 @@ public class CreateScrambleSyntaxTest {
             + "FROM tpch.lineitem "
             + "METHOD 'hash' "
             + "HASHCOLUMN l_orderkey";
-    QueryType type = ExecutionContext.identifyQueryType(createScrambleSql);
+    ExecutionContext.QueryType type = ExecutionContext.identifyQueryType(createScrambleSql);
     assertEquals(ExecutionContext.QueryType.scrambling, type);
   }
   
@@ -28,7 +27,7 @@ public class CreateScrambleSyntaxTest {
             + "FROM tpch.lineitem "
             + "METHOD hash "
             + "HASHCOLUMN `l_orderkey`";
-    QueryType type = ExecutionContext.identifyQueryType(createScrambleSql);
+    ExecutionContext.QueryType type = ExecutionContext.identifyQueryType(createScrambleSql);
     assertEquals(ExecutionContext.QueryType.scrambling, type);
   }
   

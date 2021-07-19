@@ -23,14 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.commons.VerdictOption;
-import org.verdictdb.connection.CachedDbmsConnection;
-import org.verdictdb.connection.ConcurrentJdbcConnection;
-import org.verdictdb.connection.DbmsConnection;
-import org.verdictdb.connection.JdbcConnection;
-import org.verdictdb.connection.SparkConnection;
 import org.verdictdb.coordinator.ExecutionContext;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.sqlobject.CreateSchemaQuery;
@@ -42,6 +36,12 @@ import org.verdictdb.metastore.VerdictMetaStore;
 import org.verdictdb.sqlsyntax.MysqlSyntax;
 import org.verdictdb.sqlsyntax.SqlSyntax;
 import org.verdictdb.sqlsyntax.SqlSyntaxList;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.verdictdb.connection.CachedDbmsConnection;
+import org.verdictdb.connection.ConcurrentJdbcConnection;
+import org.verdictdb.connection.DbmsConnection;
+import org.verdictdb.connection.JdbcConnection;
+import org.verdictdb.connection.SparkConnection;
 
 public class VerdictContext {
 

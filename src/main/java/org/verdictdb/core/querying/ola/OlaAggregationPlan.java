@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.exception.VerdictDBValueException;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Plans how to chop a big query into multiple smaller queries.

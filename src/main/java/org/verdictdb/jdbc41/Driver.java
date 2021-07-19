@@ -61,7 +61,7 @@ public class Driver implements java.sql.Driver {
           }
           newUrl = Joiner.on(":").join(newTokens);
         }
-        Connection verdictConnection = new org.verdictdb.jdbc41.VerdictConnection(newUrl, info);
+        Connection verdictConnection = new VerdictConnection(newUrl, info);
         System.out.println("VerdictConnection has been created: " + verdictConnection);
         return verdictConnection;
       } catch (VerdictDBException e) {

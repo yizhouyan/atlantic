@@ -18,10 +18,10 @@ package org.verdictdb.sqlreader;
 
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Triple;
-import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.coordinator.SelectQueryCoordinator;
 import org.verdictdb.core.scrambling.ScrambleMeta;
+import org.apache.commons.lang3.tuple.Triple;
+import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.BaseColumn;

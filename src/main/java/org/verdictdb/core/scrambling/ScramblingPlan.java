@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.core.querying.ExecutableNodeBase;
@@ -63,8 +64,13 @@ public class ScramblingPlan extends SimpleTreePlan {
             String oldTableName,
             ScramblingMethod method,
             Map<String, String> options,
-            PrivacyMeta privacyMeta) {
-        return create(newSchemaName, newTableName, oldSchemaName, oldTableName, method, null, options, privacyMeta);
+            PrivacyMeta privacyMeta,
+            List<Pair<String, String>> columnNamesAndTypes) {
+        return create(newSchemaName, newTableName, oldSchemaName, oldTableName, method, null, options, privacyMeta, columnNamesAndTypes);
+    }
+
+    public static ExecutableNodeBase createColumnMetaDataRetrievalNode(String oldSchemaName, String oldTableName) {
+        return ColumnMetadataRetrievalNode.create(oldSchemaName, oldTableName, COLUMN_METADATA_KEY);
     }
 
     /**
@@ -89,8 +95,8 @@ public class ScramblingPlan extends SimpleTreePlan {
             ScramblingMethod method,
             UnnamedColumn predicate,
             Map<String, String> options,
-            PrivacyMeta privacyMeta) {
-
+            PrivacyMeta privacyMeta,
+            List<Pair<String, String>> columnNamesAndTypes) {
         // create a node for step 1 - column meta data retrieval
         // these nodes will set the values for two keys: COLUMN_METADATA_KEY and PARTITION_METADATA_KEY
         ExecutableNodeBase columnMetaDataNode =
@@ -120,7 +126,7 @@ public class ScramblingPlan extends SimpleTreePlan {
         List<ExecutableNodeBase> privacyStatsNodes = new ArrayList<>();
         if (VerdictOption.isPrivacyEnabled()) {
             VerdictDBLogger.getLogger("ScramblingPlan").debug("Privacy Enabled. Generating statistics for privacy");
-            privacyStatsNodes = privacyMeta.getStatisticsNode(oldSchemaName, oldTableName, COLUMN_METADATA_KEY);
+            privacyStatsNodes = privacyMeta.getStatisticsNode(oldSchemaName, oldTableName, COLUMN_METADATA_KEY, columnNamesAndTypes);
             for (ExecutableNodeBase n : privacyStatsNodes) {
                 n.subscribeTo(columnMetaDataNode, 100);
             }

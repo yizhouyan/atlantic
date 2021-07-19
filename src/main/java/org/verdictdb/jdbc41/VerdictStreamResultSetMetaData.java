@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.verdictdb.VerdictSingleResult;
 import org.verdictdb.commons.DataTypeConverter;
+import org.verdictdb.VerdictSingleResult;
 
 /**
  * Created by: Shucheng Zhong on 9/14/18

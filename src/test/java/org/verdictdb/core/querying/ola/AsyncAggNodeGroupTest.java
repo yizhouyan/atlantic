@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.junit.Test;
 import org.verdictdb.core.querying.ExecutableNodeBase;
 import org.verdictdb.core.querying.QueryExecutionPlan;
 import org.verdictdb.core.querying.QueryExecutionPlanFactory;
-import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.exception.VerdictDBException;
@@ -24,7 +24,7 @@ public class AsyncAggNodeGroupTest {
     ScrambleMetaSet meta = new ScrambleMetaSet();
     HashMap<Integer, List<Double>> distribution = new HashMap<>();
     distribution.put(0, Arrays.asList(0.2, 0.5, 1.0));
-    ScrambleMeta tablemeta = 
+    ScrambleMeta tablemeta =
         new ScrambleMeta(
             "newSchema", "scrambledTable",
             "originalSchema", "originalTable",

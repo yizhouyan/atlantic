@@ -28,22 +28,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.verdictdb.commons.VerdictDBLogger;
+import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.core.querying.ola.AggMeta;
+import org.verdictdb.core.sqlobject.SqlConvertible;
+import org.verdictdb.exception.VerdictDBException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.tuple.Pair;
-import org.verdictdb.commons.VerdictDBLogger;
-import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.core.execplan.ExecutableNode;
 import org.verdictdb.core.execplan.ExecutableNodeRunner;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.execplan.ExecutionTokenQueue;
 import org.verdictdb.core.execplan.MethodInvocationInformation;
-import org.verdictdb.core.querying.ola.AggMeta;
-import org.verdictdb.core.sqlobject.SqlConvertible;
-import org.verdictdb.exception.VerdictDBException;
 
 public class ExecutableNodeBase implements ExecutableNode, Serializable {
 

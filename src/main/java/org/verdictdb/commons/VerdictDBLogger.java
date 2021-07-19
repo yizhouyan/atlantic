@@ -33,7 +33,7 @@ public class VerdictDBLogger implements org.slf4j.Logger {
 
   private org.slf4j.Logger logger;
 
-  private static final String VERDICT_LOGGER_NAME = "org.verdictdb";
+  private static final String VERDICT_LOGGER_NAME = "org.verdict";
 
   private VerdictDBLogger(org.slf4j.Logger logger) {
     this.logger = logger;

@@ -8,10 +8,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.verdictdb.coordinator.ScramblingCoordinator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.verdictdb.connection.JdbcConnection;
-import org.verdictdb.coordinator.ScramblingCoordinator;
 import org.verdictdb.exception.VerdictDBException;
 import org.verdictdb.sqlsyntax.H2Syntax;
 

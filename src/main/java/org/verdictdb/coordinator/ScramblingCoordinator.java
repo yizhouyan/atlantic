@@ -28,11 +28,14 @@ import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.commons.VerdictDBLogger;
-import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.connection.CachedDbmsConnection;
 import org.verdictdb.connection.ConcurrentJdbcConnection;
 import org.verdictdb.connection.DbmsConnection;
+import org.verdictdb.core.execplan.ExecutableNodeRunner;
 import org.verdictdb.core.execplan.ExecutablePlanRunner;
+import org.verdictdb.core.execplan.ExecutionInfoToken;
+import org.verdictdb.core.querying.ExecutableNodeBase;
+import org.mit.dbgroup.atlantic.core.scrambling.*;
 import org.verdictdb.core.scrambling.*;
 import org.verdictdb.core.sqlobject.BaseColumn;
 import org.verdictdb.core.sqlobject.BaseTable;
@@ -238,6 +241,8 @@ public class ScramblingCoordinator {
                 String.format(
                         "Relative size: %.6f (or equivalently, %.4f %%)", relativeSize, relativeSize * 100));
 
+        List<Pair<String, String>> columnNamesAndTypes = extractColumnNamesAndTypes(originalSchema, originalTable);
+
         ScramblingPlan plan =
                 ScramblingPlan.create(
                         scrambleSchema,
@@ -247,7 +252,8 @@ public class ScramblingCoordinator {
                         scramblingMethod,
                         query.getWhere(),
                         effectiveOptions,
-                        privacyMeta);
+                        privacyMeta,
+                        columnNamesAndTypes);
         ExecutablePlanRunner.runTillEnd(conn, plan);
         log.info(
                 String.format(
@@ -334,6 +340,17 @@ public class ScramblingCoordinator {
         return meta;
     }
 
+    private List<Pair<String, String>> extractColumnNamesAndTypes(String originalSchema, String originalTable) throws VerdictDBException{
+        ExecutableNodeBase columnMetaDataNode = ScramblingPlan.createColumnMetaDataRetrievalNode(originalSchema, originalTable);
+        ExecutionInfoToken originalTableMetaDataResults = ExecutableNodeRunner.execute(conn, columnMetaDataNode);
+        Map<String, Object> metaData = new HashMap<>();
+        for (Entry<String, Object> keyValue : originalTableMetaDataResults.entrySet()) {
+            String key = keyValue.getKey();
+            Object value = keyValue.getValue();
+            metaData.put(key, value);
+        }
+        return (List<Pair<String, String>>) metaData.get(ScramblingPlan.COLUMN_METADATA_KEY);
+    }
     /**
      * @param originalSchema Original schema name
      * @param originalTable  Original table name
@@ -421,6 +438,8 @@ public class ScramblingCoordinator {
                 String.format(
                         "Relative size: %.6f (or equivalently, %.4f %%)", relativeSize, relativeSize * 100));
 
+        List<Pair<String, String>> columnNamesAndTypes = extractColumnNamesAndTypes(originalSchema, originalTable);
+        log.debug("Original column names and types" + columnNamesAndTypes);
         ScramblingPlan plan =
                 ScramblingPlan.create(
                         newSchema,
@@ -430,7 +449,8 @@ public class ScramblingCoordinator {
                         scramblingMethod,
                         where,
                         effectiveOptions,
-                        privacyMeta);
+                        privacyMeta,
+                        columnNamesAndTypes);
         ExecutablePlanRunner.runTillEnd(conn, plan);
         log.info(String.format("Finished creating %s.%s", newSchema, newTable));
 

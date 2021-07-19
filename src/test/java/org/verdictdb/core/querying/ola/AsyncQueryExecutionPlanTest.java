@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +23,6 @@ import org.verdictdb.core.querying.ExecutableNodeBase;
 import org.verdictdb.core.querying.QueryExecutionPlan;
 import org.verdictdb.core.querying.QueryExecutionPlanFactory;
 import org.verdictdb.core.querying.QueryNodeBase;
-import org.verdictdb.core.scrambling.ScrambleMeta;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
 import org.verdictdb.core.scrambling.SimpleTreePlan;
 import org.verdictdb.core.scrambling.UniformScrambler;

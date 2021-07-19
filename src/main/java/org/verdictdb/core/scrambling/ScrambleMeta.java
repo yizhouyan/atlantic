@@ -18,6 +18,7 @@ package org.verdictdb.core.scrambling;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +57,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
         "numberOfTiers",
         "method",
         "hashcolumn",
-        "scramblingMethod",
-        "privacyMeta"
+        "scramblingMethod"
+//        "privacyMeta"
 })
 public class ScrambleMeta implements Serializable {
 
@@ -92,9 +93,6 @@ public class ScrambleMeta implements Serializable {
     // the column on which a hash function is used (only applicable to hash sampling).
     String hashColumn;
 
-    // privacy related metadata (max/min for each column)
-    PrivacyMeta privacyMeta;
-
     /**
      * The probability mass function of the sizes of the aggregation blocks for a tier. The key is the
      * id of a tier (e.g., 0, 1, ..., 3), and the list is the cumulative distribution. The length of
@@ -102,6 +100,16 @@ public class ScrambleMeta implements Serializable {
      */
     @JsonProperty("cumulativeDistributions")
     Map<Integer, List<Double>> cumulativeDistributionForTier = new HashMap<>();
+
+    // privacy related metadata (max/min for each column)
+    @JsonProperty("privacyMetaColMin")
+    Map<String, BigDecimal> privacyColumnMin = new HashMap<>();
+
+    @JsonProperty("privacyMetaColMax")
+    Map<String, BigDecimal> privacyColumnMax = new HashMap<>();
+
+    @JsonProperty("privacyMetaMaxFreq")
+    Map<String, BigDecimal> privacyMetaMaxFreq = new HashMap<>();
 
     // subsample column; not used currently
     @JsonIgnore
@@ -189,7 +197,6 @@ public class ScrambleMeta implements Serializable {
             ScramblingMethodBase scramblingMethod,
             PrivacyMeta privacyMeta)
             throws VerdictDBValueException {
-
         this(
                 scrambleSchemaName,
                 scrambleTableName,
@@ -200,7 +207,9 @@ public class ScrambleMeta implements Serializable {
                 tierColumn,
                 tierCount,
                 cumulativeMassDistributionPerTier);
-        this.privacyMeta = privacyMeta;
+        this.privacyColumnMin = privacyMeta.columnMin;
+        this.privacyColumnMax = privacyMeta.columnMax;
+        this.privacyMetaMaxFreq = privacyMeta.privacyMetaMaxFreq;
         this.method = method;
         this.hashColumn = hashColumn;
         this.scramblingMethod = scramblingMethod;
@@ -335,13 +344,24 @@ public class ScrambleMeta implements Serializable {
         this.scramblingMethod = scramblingMethod;
     }
 
-    public PrivacyMeta getPrivacyMeta() {
-        return privacyMeta;
+    public Map<String, BigDecimal> getPrivacyColumnMin() {
+        return privacyColumnMin;
     }
 
-    public void setPrivacyMeta(PrivacyMeta privacyMeta) {
-        this.privacyMeta = privacyMeta;
+    public Map<String, BigDecimal> getPrivacyColumnMax() {
+        return privacyColumnMax;
     }
+
+    public Map<String, BigDecimal> getPrivacyMetaMaxFreq() {
+        return privacyMetaMaxFreq;
+    }
+//    public PrivacyMeta getPrivacyMeta() {
+//        return privacyMeta;
+//    }
+
+//    public void setPrivacyMeta(PrivacyMeta privacyMeta) {
+//        this.privacyMeta = privacyMeta;
+//    }
 
     public String toJsonString() {
         ObjectMapper objectMapper = new ObjectMapper();

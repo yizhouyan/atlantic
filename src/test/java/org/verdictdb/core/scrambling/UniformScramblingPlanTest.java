@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ public class UniformScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options, new PrivacyMeta());
+        method, options, new PrivacyMeta(), Arrays.asList());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(mysqlConn);
@@ -118,7 +119,7 @@ public class UniformScramblingPlanTest {
     ScramblingPlan plan = ScramblingPlan.create(
         newSchemaName, newTableName,
         oldSchemaName, oldTableName,
-        method, options, new PrivacyMeta());
+        method, options, new PrivacyMeta(), Arrays.asList());
 //    System.out.println(plan.getReportingNode());
 
     DbmsConnection conn = JdbcConnection.create(mysqlConn);

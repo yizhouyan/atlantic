@@ -3,9 +3,10 @@ package org.verdictdb.core.querying.simplifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.verdictdb.connection.DbmsQueryResult;
+import org.verdictdb.exception.VerdictDBException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.CreateTableAsSelectNode;
 import org.verdictdb.core.querying.ExecutableNodeBase;
@@ -23,7 +24,6 @@ import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SqlConvertible;
 import org.verdictdb.core.sqlobject.SubqueryColumn;
 import org.verdictdb.core.sqlobject.UnnamedColumn;
-import org.verdictdb.exception.VerdictDBException;
 
 import com.google.common.base.Optional;
 
@@ -61,7 +61,7 @@ public class ConsolidatedExecutionNode extends QueryNodeWithPlaceHolders {
   private final String asteriskAlias = "verdictdb_asterisk_alias";
 
   public ConsolidatedExecutionNode(
-      SelectQuery selectQuery, QueryNodeWithPlaceHolders parent, CreateTableAsSelectNode child) {
+          SelectQuery selectQuery, QueryNodeWithPlaceHolders parent, CreateTableAsSelectNode child) {
     super(parent.getId(), selectQuery);
     parentNode = parent;
     childNode = child;

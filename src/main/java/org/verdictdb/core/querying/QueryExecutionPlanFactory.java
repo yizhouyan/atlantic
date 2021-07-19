@@ -19,10 +19,10 @@ package org.verdictdb.core.querying;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.coordinator.QueryContext;
 import org.verdictdb.core.querying.ola.AsyncAggExecutionNode;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
+import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.AliasReference;
 import org.verdictdb.core.sqlobject.AliasedColumn;

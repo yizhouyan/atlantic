@@ -19,10 +19,10 @@ package org.verdictdb.core.querying;
 import java.util.List;
 
 import org.verdictdb.connection.DbmsQueryResult;
-import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.sqlobject.SelectQuery;
 import org.verdictdb.core.sqlobject.SqlConvertible;
 import org.verdictdb.exception.VerdictDBException;
+import org.verdictdb.core.execplan.ExecutionInfoToken;
 
 public class ProjectionNode extends CreateTableAsSelectNode {
 
