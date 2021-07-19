@@ -35,7 +35,6 @@ import org.verdictdb.core.execplan.ExecutableNodeRunner;
 import org.verdictdb.core.execplan.ExecutablePlanRunner;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.ExecutableNodeBase;
-import org.mit.dbgroup.atlantic.core.scrambling.*;
 import org.verdictdb.core.scrambling.*;
 import org.verdictdb.core.sqlobject.BaseColumn;
 import org.verdictdb.core.sqlobject.BaseTable;

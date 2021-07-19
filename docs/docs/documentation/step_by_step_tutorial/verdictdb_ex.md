@@ -179,7 +179,7 @@ Also, replace the existing dependency list with
 ```scala
 libraryDependencies ++= Seq(
   scalaTest % Test,
-  "org.verdictdb" % "verdictdb-core" % "0.5.8",
+  "org.atlantic" % "verdictdb-core" % "0.5.8",
   "org.apache.spark" %% "spark-core" % "2.3.1" % "provided",
   "org.apache.spark" %% "spark-sql" % "2.3.1" % "provided"
 )
@@ -196,8 +196,8 @@ Edit `src/main/scala/example/Hello.scala` as follows:
 package example
 
 import org.apache.spark.sql.SparkSession
-import org.verdictdb.VerdictContext
-import org.verdictdb.connection.SparkConnection
+import VerdictContext
+import SparkConnection
 import scala.util.Random
 
 object Hello extends App {

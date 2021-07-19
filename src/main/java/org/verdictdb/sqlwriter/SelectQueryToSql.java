@@ -18,7 +18,6 @@ package org.verdictdb.sqlwriter;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
-import org.mit.dbgroup.atlantic.core.sqlobject.*;
 import org.verdictdb.core.sqlobject.*;
 import org.verdictdb.exception.VerdictDBException;
 import org.verdictdb.exception.VerdictDBTypeException;

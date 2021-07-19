@@ -1,5 +1,6 @@
 package org.verdictdb.privacy;
 
+import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.core.sqlobject.AbstractRelation;
 import org.verdictdb.core.sqlobject.BaseTable;
 import org.verdictdb.core.sqlobject.ColumnOp;
@@ -21,8 +22,8 @@ public class BaseTableNoiseEstimator extends DPNoiseEstimator{
     public BaseTableNoiseEstimator(SelectQuery originalQuery,
                                    ScrambleMetaSet scrambleMetaSet,
                                    HashMap<Integer, ColumnOp> aggregationColumns,
-                                   DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet) {
-        super(originalQuery, aggregationColumns);
+                                   DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet, VerdictOption options) {
+        super(originalQuery, aggregationColumns, options);
         setUpDPNoiseEstimator(scrambleMetaSet, dpRelatedTableMetaDataSet);
         log.debug("Differential Privacy supported = " + isSupported);
     }

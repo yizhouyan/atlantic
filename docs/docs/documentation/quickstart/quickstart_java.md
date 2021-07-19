@@ -12,7 +12,7 @@ place the verdictdb dependency in the `<dependencies>` of your pom.xml.
 
 ```
 <dependency>
-    <groupId>org.verdictdb</groupId>
+    <groupId>org.atlantic</groupId>
     <artifactId>verdictdb-core</artifactId>
     <version>{{verdictdb.version}}</version>
 </dependency>

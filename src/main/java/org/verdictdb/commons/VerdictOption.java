@@ -33,16 +33,20 @@ public class VerdictOption {
 
     private static final String DEFAULT_CONSOLE_LOG_LEVEL = "debug";
     private static final String DEFAULT_FILE_LOG_LEVEL = "debug";
-    private static final boolean ENABLE_PRIVACY = true;
+    private static final boolean DEFAULT_ENABLE_PRIVACY = true;
+
+    // Differential Privacy related parameters
+    private static final double DEFAULT_PRIVACY_EPSILON = Math.pow(10, -2);
+    private static final double DEFAULT_PRIVACY_DELTA = Math.pow(10, -6);
 
     private String verdictMetaSchemaName = DEFAULT_META_SCHEMA_NAME;
     private String verdictTempSchemaName = DEFAULT_TEMP_SCHEMA_NAME;
     private String verdictConsoleLogLevel = DEFAULT_CONSOLE_LOG_LEVEL;
     private String verdictFileLogLevel = DEFAULT_FILE_LOG_LEVEL;
+    private boolean verdictEnableDP = DEFAULT_ENABLE_PRIVACY;
+    private double verdictPrivacyEpsilon = DEFAULT_PRIVACY_EPSILON;
+    private double verdictPrivacyDelta = DEFAULT_PRIVACY_DELTA;
 
-    // Differential Privacy related parameters
-    private static final double PRIVACY_EPSILON = Math.pow(10, -2);
-    private static final double PRIVACY_DELTA = Math.pow(10, -6);
 
     public VerdictOption() {
     }
@@ -110,15 +114,15 @@ public class VerdictOption {
         return DEFAULT_FILE_LOG_LEVEL;
     }
 
-    public static double getPrivacyEpsilon() {
-        return PRIVACY_EPSILON;
+    public double getPrivacyEpsilon() {
+        return verdictPrivacyEpsilon;
     }
 
-    public static double getPrivacyDelta() {
-        return PRIVACY_DELTA;
+    public double getPrivacyDelta() {
+        return verdictPrivacyDelta;
     }
 
-    public static boolean isPrivacyEnabled() {return ENABLE_PRIVACY; }
+    public boolean isPrivacyEnabled() {return verdictEnableDP; }
 
     public void parseConnectionString(String str) {
         String[] tokens = str.split("[&;?]");
@@ -152,9 +156,16 @@ public class VerdictOption {
         // Get properties here
         String newVerdictMetaSchemaName = prop.getProperty("verdictdbmetaschema");
         String newVerdictTempSchemaName = prop.getProperty("verdictdbtempschema");
+        String newVerdictIsPrivacyEnabled = prop.getProperty("enabledp");
+        String newVerdictEpsilon = prop.getProperty("epsilon");
+        String newVerdictDelta = prop.getProperty("delta");
 
         // Set them if properties exist
         if (newVerdictMetaSchemaName != null) verdictMetaSchemaName = newVerdictMetaSchemaName;
         if (newVerdictTempSchemaName != null) verdictTempSchemaName = newVerdictTempSchemaName;
+        if (newVerdictIsPrivacyEnabled != null) verdictEnableDP = Boolean.parseBoolean(newVerdictIsPrivacyEnabled);
+        if (newVerdictEpsilon != null) verdictPrivacyEpsilon = Double.parseDouble(newVerdictEpsilon);
+        if (newVerdictDelta != null) verdictPrivacyDelta = Double.parseDouble(newVerdictDelta);
+
     }
 }

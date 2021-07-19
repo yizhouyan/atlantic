@@ -124,12 +124,11 @@ public class ScramblingPlan extends SimpleTreePlan {
 
         // create a node for step 2b - privacy related statistics retrieval
         List<ExecutableNodeBase> privacyStatsNodes = new ArrayList<>();
-        if (VerdictOption.isPrivacyEnabled()) {
-            VerdictDBLogger.getLogger("ScramblingPlan").debug("Privacy Enabled. Generating statistics for privacy");
-            privacyStatsNodes = privacyMeta.getStatisticsNode(oldSchemaName, oldTableName, COLUMN_METADATA_KEY, columnNamesAndTypes);
-            for (ExecutableNodeBase n : privacyStatsNodes) {
-                n.subscribeTo(columnMetaDataNode, 100);
-            }
+
+        VerdictDBLogger.getLogger("ScramblingPlan").debug("Privacy Enabled. Generating statistics for privacy");
+        privacyStatsNodes = privacyMeta.getStatisticsNode(oldSchemaName, oldTableName, COLUMN_METADATA_KEY, columnNamesAndTypes);
+        for (ExecutableNodeBase n : privacyStatsNodes) {
+            n.subscribeTo(columnMetaDataNode, 100);
         }
 
         // create a node for step 3 - scrambling

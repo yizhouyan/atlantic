@@ -38,10 +38,12 @@ public abstract class DPNoiseEstimator {
 
     // The S = max(k=0...n) e^(-beta*k)S(k)(q,x) will be pre-computed for each aggregation function.
     HashMap<Integer, BigDecimal> preComputedS;
+    private VerdictOption options;
 
-    public DPNoiseEstimator(SelectQuery originalQuery, HashMap<Integer, ColumnOp> aggregationColumns) {
+    public DPNoiseEstimator(SelectQuery originalQuery, HashMap<Integer, ColumnOp> aggregationColumns, VerdictOption options) {
         this.originalQuery = originalQuery;
         this.aggregationColumns = aggregationColumns;
+        this.options = options;
     }
 
     protected boolean isGroupByQuery(){
@@ -49,8 +51,8 @@ public abstract class DPNoiseEstimator {
     }
 
     protected double computeBeta(double sampleRate) {
-        double delta = VerdictOption.getPrivacyDelta();
-        double epsilon = VerdictOption.getPrivacyEpsilon();
+        double delta = options.getPrivacyDelta();
+        double epsilon = options.getPrivacyEpsilon();
         log.trace(String.format("Start setting up DP Noise with delta = %f, " +
                 "epsilon = %f, sample rate = %f", delta, epsilon, sampleRate));
         double transEpsilon = Math.log((Math.exp(epsilon) - 1) / sampleRate + 1);

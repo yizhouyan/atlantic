@@ -2,8 +2,8 @@ package org.verdictdb.privacy;
 
 import org.verdictdb.VerdictSingleResult;
 import org.verdictdb.commons.VerdictDBLogger;
+import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
-import org.mit.dbgroup.atlantic.core.sqlobject.*;
 import org.verdictdb.core.sqlobject.*;
 
 import java.util.HashMap;
@@ -19,25 +19,27 @@ public class DPDriver {
 
     private HashMap<Integer, ColumnOp> aggregationColumns;
     private boolean isSupported;
+    private VerdictOption options;
 
     public DPDriver(SelectQuery originalQuery, ScrambleMetaSet scrambleMetaSet,
-                    DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet) {
+                    DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet, VerdictOption options) {
         isSupported = isQuerySupported(originalQuery);
         if (isSupported) {
-             AbstractRelation table = originalQuery.getFromList().get(0);
-             if (table instanceof BaseTable) {
-                 noiseEstimator = new BaseTableNoiseEstimator(originalQuery, scrambleMetaSet,
-                         aggregationColumns, dpRelatedTableMetaDataSet);
-             } else if(table instanceof JoinTable){
-                 noiseEstimator = new JoinTableNoiseEstimator(originalQuery, scrambleMetaSet,
-                         aggregationColumns, dpRelatedTableMetaDataSet);
-             }
+            AbstractRelation table = originalQuery.getFromList().get(0);
+            if (table instanceof BaseTable) {
+                noiseEstimator = new BaseTableNoiseEstimator(originalQuery, scrambleMetaSet,
+                        aggregationColumns, dpRelatedTableMetaDataSet, options);
+            } else if (table instanceof JoinTable) {
+                noiseEstimator = new JoinTableNoiseEstimator(originalQuery, scrambleMetaSet,
+                        aggregationColumns, dpRelatedTableMetaDataSet, options);
+            }
         }
-        log.debug("Differential Privacy supported = " + getIsSupported());
+        this.options=options;
+        log.debug("Differential Privacy supported = " + getIsSupported() + ", enabled = " + options.isPrivacyEnabled());
     }
 
-    private boolean getIsSupported(){
-        return isSupported && (noiseEstimator !=null) && noiseEstimator.isSupported;
+    private boolean getIsSupported() {
+        return isSupported && (noiseEstimator != null) && noiseEstimator.isSupported;
     }
 
     private boolean isQuerySupported(SelectQuery originalQuery) {
@@ -67,7 +69,7 @@ public class DPDriver {
         return true;
     }
 
-    public VerdictSingleResult addNoiseToSingleResult(VerdictSingleResult result){
+    public VerdictSingleResult addNoiseToSingleResult(VerdictSingleResult result) {
         if (noiseEstimator == null) {
             log.debug("DP not supported in current query, return the original result. ");
             return result;

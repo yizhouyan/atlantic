@@ -2,8 +2,8 @@ package org.verdictdb.privacy;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.verdictdb.commons.VerdictDBLogger;
+import org.verdictdb.commons.VerdictOption;
 import org.verdictdb.core.scrambling.ScrambleMetaSet;
-import org.mit.dbgroup.atlantic.core.sqlobject.*;
 import org.verdictdb.core.sqlobject.*;
 
 import java.math.BigDecimal;
@@ -20,8 +20,8 @@ public class JoinTableNoiseEstimator extends DPNoiseEstimator{
     public JoinTableNoiseEstimator(SelectQuery originalQuery,
                                    ScrambleMetaSet scrambleMetaSet,
                                    HashMap<Integer, ColumnOp> aggregationColumns,
-                                   DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet) {
-        super(originalQuery, aggregationColumns);
+                                   DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet, VerdictOption options) {
+        super(originalQuery, aggregationColumns, options);
         if (!isJoinQuerySupported())
             return;
         setUpDPNoiseEstimator(scrambleMetaSet, dpRelatedTableMetaDataSet);

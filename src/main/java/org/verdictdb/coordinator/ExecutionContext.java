@@ -329,15 +329,19 @@ public class ExecutionContext {
     ScrambleMetaSet scrambleMetaSet = metaStore.retrieve();
     DPRelatedTableMetaDataSet dpRelatedTableMetaDataSet =
             DPRelatedTableMetaDataSet.createFromScrambleMetaSet(scrambleMetaSet);
-    DPDriver dpNoiseEst = new DPDriver(selectQuery, scrambleMetaSet, dpRelatedTableMetaDataSet);
+    DPDriver dpNoiseEst = new DPDriver(selectQuery, scrambleMetaSet, dpRelatedTableMetaDataSet, options);
     try {
       while (stream.hasNext()) {
         VerdictSingleResult rs = stream.next();
-        VerdictSingleResult rsWithNoise = dpNoiseEst.addNoiseToSingleResult(rs);
-        accEst.add(rsWithNoise);
+        VerdictSingleResult current_rs = rs;
+        if (options.isPrivacyEnabled()) {
+          VerdictSingleResult rsWithNoise = dpNoiseEst.addNoiseToSingleResult(rs);
+          current_rs = rsWithNoise;
+          accEst.add(rsWithNoise);
+        }
         if (accEst.isLastResultAccurate()) {
           log.debug("Current result is accurate, returning current result...");
-          return rsWithNoise;
+          return current_rs;
         }
       }
       // return the last result otherwise

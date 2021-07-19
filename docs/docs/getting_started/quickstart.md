@@ -21,7 +21,7 @@ To insert data into MySQL in Python without `pyverdict`, we could use [pymysql](
 
 ```xml tab='Java'
 <dependency>
-    <groupId>org.verdictdb</groupId>
+    <groupId>org.atlantic</groupId>
     <artifactId>verdictdb-core</artifactId>
     <version>{{verdictdb.version}}</version>
 </dependency>

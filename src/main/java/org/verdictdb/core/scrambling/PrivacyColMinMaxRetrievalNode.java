@@ -6,7 +6,6 @@ import org.verdictdb.commons.VerdictDBLogger;
 import org.verdictdb.connection.DbmsQueryResult;
 import org.verdictdb.core.execplan.ExecutionInfoToken;
 import org.verdictdb.core.querying.QueryNodeBase;
-import org.mit.dbgroup.atlantic.core.sqlobject.*;
 import org.verdictdb.core.sqlobject.*;
 import org.verdictdb.exception.VerdictDBException;
 import org.verdictdb.exception.VerdictDBValueException;

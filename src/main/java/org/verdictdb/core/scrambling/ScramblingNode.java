@@ -165,9 +165,7 @@ public class ScramblingNode extends CreateScrambledTableNode {
                 metaData.put(key, value);
             }
         }
-        if (VerdictOption.isPrivacyEnabled()) {
-            privacyMeta.extractPrivacyMeta(metaData);
-        }
+        privacyMeta.extractPrivacyMeta(metaData);
         selectQuery = composeQuery(metaData);
 
         // add partitioning for block agg column
