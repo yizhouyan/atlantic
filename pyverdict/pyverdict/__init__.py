@@ -27,11 +27,11 @@ def impala_context(host, port, schema=None, user=None, password=None):
 def impala(host, port, schema=None, user=None, password=None):
     return impala_context(host, port, schema, user, password)
 
-def mysql_context(host, user, password=None, port=3306):
-    return VerdictContext.new_mysql_context(host, user, password, port)
+def mysql_context(host, user, password=None, port=3306, enabledp=None, epsilon=None, delta=None):
+    return VerdictContext.new_mysql_context(host, user, password, port, enabledp=enabledp, epsilon=epsilon, delta=delta)
 
-def mysql(host, user, password=None, port=3306):
-    return mysql_context(host, user, password, port)
+def mysql(host, user, password=None, port=3306, enable_dp=None, epsilon=None, delta=None):
+    return mysql_context(host, user, password, port, enable_dp, epsilon, delta)
 
 def postgres_context(host, port, dbname, user, password=None):
     return VerdictContext.new_postgres_context(dbname, user, password, host, port)

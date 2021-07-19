@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Show Meta Data</h1>
+<div class="row">
+    <table class="table-full">
+        <tr>
+            <th>SchemaName</th>
+            <th>TableName</th>
+            <th>OriginalTableName</th>
+            <th>PrivacyMetaColMax</th>
+            <th>PrivacyMetaColMin</th>
+            <th>PrivacyMetaMaxFreq</th>
+        </tr>
+        {% for data in meta_data %}
+        <tr>
+            <td>{{data.schemaName}}</td>
+            <td>{{data.tableName}}</td>
+            <td>{{data.originalTableName}}</td>
+            <td>{{data.privacyMetaColMax}}</td>
+            <td>{{data.privacyMetaColMin}}</td>
+            <td>{{data.privacyMetaMaxFreq}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <form action="/atlantic/query_data" method="post" enctype=multipart/form-data>
+        <div class="column left">
+            <h2>Database Config</h2>
+            <table class="table-full">
+                <tr>
+                    <td>Database</td>
+                    <td>
+                        <div class="custom-select" style="width:200px;">
+                            <select id="database" name="database" value={{current_db}}>
+                                <option value="mysql">MySQL</option>
+                                <option value="postgresql">Postgresql</option>
+                                <option value="presto">Presto</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Host</td>
+                    <td><input name="host" value={{current_host}} type="text"/></td>
+                </tr>
+                <tr>
+                    <td>Port</td>
+                    <td><input name="port" value={{current_port}} type="number"/></td>
+                </tr>
+                <tr>
+                    <td>User</td>
+                    <td><input name="user" value={{current_user}} type="text"/></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input name="password" type="password" value={{current_pwd}}/></td>
+                </tr>
+            </table>
+            <h2>Privacy Related Config</h2>
+            <table class="table-full">
+                <tr>
+                    <td>Delta</td>
+                    <td><input name="delta" value=0.000001 type="number"/></td>
+                </tr>
+                <tr>
+                    <td>Epsilon</td>
+                    <td><input name="epsilon" value=0.01 type="number"/></td>
+                </tr>
+            </table>
+        </div>
+        <div class="column right">
+            <table class="table-full">
+                <h2>Query Scramble Table</h2>
+                <tr>
+                    <textarea style="height: 180px" placeholder="Type your query here..." name="scramble_query">{{scramble_query}}</textarea>
+                <tr>
+                    <h2>Query Original Table</h2>
+                <tr>
+                    <textarea style="height: 180px" placeholder="Type your query here..." name="original_query">{{original_query}}</textarea>
+                <tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div style="float:right">
+                            <input class="button" type="submit" value="Submit" id="SubmitButton" style="float: left;"/>
+                            <div class="loader" id="loadingImg" style="float: left;"></div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</div>
+{% if final_results %}
+<div class="row">
+    <center>
+        <form enctype=multipart/form-data>
+            <h3>Performance Summary</h3>
+            <table>
+                <tr>
+                    <td>Scramble Query Time Cost</td>
+                    <td>{{ final_results.scramble_query_time }}</td>
+                </tr>
+                <tr>
+                    <td>Original Query Time Cost</td>
+                    <td>{{ final_results.original_query_time }}</td>
+                </tr>
+                <tr>
+                    <td>Accuracy (Compared to GT)</td>
+                    <td>{{ final_results.accuracy_to_gt }}</td>
+                </tr>
+                <tr>
+                    <td>Accuracy (Compared to Sampling)</td>
+                    <td>{{ final_results.accuracy_to_sampling }}</td>
+                </tr>
+            </table>
+        </form>
+
+        <h3>Download Results</h3>
+        {% if final_results.scramble_query_results %}
+        <table>
+            <tr>
+                <td>Download Scramble Query Results:</td>
+                <td><a href="/return-files/{{final_results}}" target="_blank"><i class="fa fa-download"
+                                                                                 aria-hidden="true"></i>Scramble Query Results</a>
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+
+        {% if final_results.original_query_results %}
+        <table>
+            <tr>
+                <td>Download Original Query Results:</td>
+                <td><a href="/return-files/{{final_results}}" target="_blank"><i class="fa fa-download"
+                                                                                 aria-hidden="true"></i>Original Query Results</a>
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+
+        {% if final_results.processing_logs %}
+        <table>
+            <tr>
+                <td>Download Processing Log:</td>
+                <td><a href="/return-files/{{final_results.processing_logs}}" target="_blank"><i class="fa fa-download"
+                                                                                aria-hidden="true"></i>Processing Log</a>
+                </td>
+            </tr>
+        </table>
+        {% endif %}
+    </center>
+</div>
+{% endif %}
+{% endblock %}

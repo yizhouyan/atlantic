@@ -26,9 +26,11 @@ from time import sleep, time
 # To properly close all connections
 created_verdict_contexts = []
 
+
 def close_verdict_contexts():
     for c in created_verdict_contexts:
         c.close()
+
 
 atexit.register(close_verdict_contexts)
 
@@ -52,13 +54,15 @@ class VerdictContext:
     """
 
     def __init__(
-        self,
-        url,
-        extra_class_path=None,
-        user=None,
-        password=None,
-        verdictdbmetaschema=None,
-        verdictdbtempschema=None,
+            self,
+            url,
+            extra_class_path=None,
+            user=None,
+            password=None,
+            verdictdbmetaschema=None,
+            verdictdbtempschema=None,
+            enabledp=None,
+            epsilon=None, delta=None
     ):
         self._gateway = self._get_gateway(extra_class_path)
         self._context = self._get_context(
@@ -68,6 +72,8 @@ class VerdictContext:
             password,
             verdictdbmetaschema,
             verdictdbtempschema,
+            enabledp,
+            epsilon, delta
         )
 
         self._dbtype = self._get_dbtype(url)
@@ -85,25 +91,33 @@ class VerdictContext:
 
     @classmethod
     def new_mysql_context(
-        cls,
-        host,
-        user,
-        password=None,
-        port=3306,
-        verdictdbmetaschema=None,
-        verdictdbtempschema=None,
+            cls,
+            host,
+            user,
+            password=None,
+            port=3306,
+            verdictdbmetaschema=None,
+            verdictdbtempschema=None,
+            enabledp=None,
+            epsilon=None,
+            delta=None,
     ):
         if password is None:
             connection_string = \
-                f'jdbc:mysql://{host}:{port}?user={user}'
+                f'jdbc:mysql://{host}:{port}?useSSL=false'  # ?user={user}
         else:
             connection_string = \
-                f'jdbc:mysql://{host}:{port}?user={user}&password={password}'
+                f'jdbc:mysql://{host}:{port}?useSSL=false'  # user={user}&password={password}
 
         ins = cls(
             connection_string,
             verdictdbmetaschema=verdictdbmetaschema,
             verdictdbtempschema=verdictdbtempschema,
+            user=user,
+            password=password,
+            enabledp=enabledp,
+            epsilon=epsilon,
+            delta=delta
         )
 
         created_verdict_contexts.append(ins)
@@ -111,14 +125,14 @@ class VerdictContext:
 
     @classmethod
     def new_presto_context(
-        cls,
-        host,
-        catalog,
-        user,
-        password=None,
-        port=8080,
-        verdictdbmetaschema=None,
-        verdictdbtempschema=None,
+            cls,
+            host,
+            catalog,
+            user,
+            password=None,
+            port=8080,
+            verdictdbmetaschema=None,
+            verdictdbtempschema=None,
     ):
         if password is None:
             connection_string = \
@@ -154,14 +168,14 @@ class VerdictContext:
 
     @classmethod
     def new_impala_context(
-        cls,
-        host,
-        port,
-        schema=None,
-        username=None,
-        password=None,
-        verdictdbmetaschema=None,
-        verdictdbtempschema=None,
+            cls,
+            host,
+            port,
+            schema=None,
+            username=None,
+            password=None,
+            verdictdbmetaschema=None,
+            verdictdbtempschema=None,
     ):
         connection_string = 'jdbc:impala://%s:%s%s%s'
 
@@ -192,15 +206,14 @@ class VerdictContext:
 
         return instance
 
-
     @classmethod
     def new_postgres_context(
-        cls,
-        dbname,
-        user,
-        password=None,
-        host='localhost',
-        port=5432,
+            cls,
+            dbname,
+            user,
+            password=None,
+            host='localhost',
+            port=5432,
     ):
 
         passwordStr = ''
@@ -323,18 +336,24 @@ class VerdictContext:
         return verdictcommon.get_verdictdb_version()
 
     def _get_context(
-        self,
-        gateway,
-        url,
-        user,
-        password,
-        verdictdbmetaschema,
-        verdictdbtempschema,
+            self,
+            gateway,
+            url,
+            user,
+            password,
+            verdictdbmetaschema,
+            verdictdbtempschema,
+            enabledp,
+            epsilon,
+            delta,
     ):
         verdict_options = self._get_verdict_options(
             gateway,
             verdictdbmetaschema,
             verdictdbtempschema,
+            enabledp,
+            epsilon,
+            delta
         )
 
         if user is not None or password is not None:
@@ -356,12 +375,14 @@ class VerdictContext:
                 verdict_options,
             )
 
-
     def _get_verdict_options(
-        self,
-        gateway,
-        verdictdbmetaschema,
-        verdictdbtempschema,
+            self,
+            gateway,
+            verdictdbmetaschema,
+            verdictdbtempschema,
+            enabledp,
+            epsilon,
+            delta,
     ):
         verdict_options = gateway.jvm.org.verdictdb.commons.VerdictOption()
         verdict_options.parseProperties(
@@ -369,17 +390,22 @@ class VerdictContext:
                 gateway,
                 verdictdbmetaschema,
                 verdictdbtempschema,
+                enabledp,
+                epsilon,
+                delta,
             )
         )
 
         return verdict_options
 
-
     def _get_properties(
-        self,
-        gateway,
-        verdictdbmetaschema,
-        verdictdbtempschema,
+            self,
+            gateway,
+            verdictdbmetaschema,
+            verdictdbtempschema,
+            enabledp,
+            epsilon,
+            delta,
     ):
         properties = gateway.jvm.java.util.Properties()
 
@@ -387,6 +413,11 @@ class VerdictContext:
             properties.setProperty('verdictdbmetaschema', verdictdbmetaschema)
         if verdictdbtempschema is not None:
             properties.setProperty('verdictdbtempschema', verdictdbtempschema)
+        if enabledp is not None:
+            properties.setProperty('enabledp', enabledp)
+        if epsilon is not None:
+            properties.setProperty('epsilon', epsilon)
+        if delta is not None:
+            properties.setProperty('delta', delta)
 
         return properties
-
