@@ -86,7 +86,7 @@ def running_logs():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return redirect('/atlantic/home')
+    return redirect('/atlantic/load_data')
 
 
 @app.route('/atlantic/home', methods=['GET'])
